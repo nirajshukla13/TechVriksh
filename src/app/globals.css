@@ -1,0 +1,428 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* ─── Backgrounds ─── */
+  --tv-bg: #07110F;
+  --tv-bg-secondary: #0B1714;
+  --tv-surface: #101E1A;
+  --tv-surface-elevated: #14241F;
+  --tv-bg-deep: #040a08;
+
+  /* ─── Primary accent — Green ─── */
+  --tv-primary: #39D98A;
+  --tv-primary-light: #78F2B0;
+  --tv-primary-dim: rgba(57, 217, 138, 0.12);
+
+  /* ─── Secondary accent — Cyan (legacy support) ─── */
+  --tv-cyan: #6befd7;
+  --tv-cyan-muted: #216c67;
+  --tv-cyan-dim: rgba(107, 239, 215, 0.12);
+
+  /* ─── Tertiary accent — Magenta ─── */
+  --tv-magenta: #f9a3c8;
+  --tv-magenta-muted: #4d1339;
+  --tv-magenta-dim: rgba(249, 163, 200, 0.12);
+
+  /* ─── Text hierarchy ─── */
+  --tv-text-primary: #F2F7F4;
+  --tv-text-secondary: #A7B8B0;
+  --tv-text-muted: #6F8179;
+  --tv-text-tertiary: #4a5751;
+
+  /* ─── Borders ─── */
+  --tv-border: rgba(100, 180, 150, 0.18);
+  --tv-border-subtle: rgba(100, 180, 150, 0.08);
+  --tv-border-strong: rgba(100, 180, 150, 0.28);
+  --tv-border-section: rgba(57, 217, 138, 0.12);
+
+  /* ─── Shadows ─── */
+  --tv-shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --tv-shadow-md: 0 12px 32px rgba(0, 0, 0, 0.32);
+  --tv-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --tv-shadow-depth: 0 24px 64px rgba(0, 0, 0, 0.5);
+
+  /* ─── Z-index layers ─── */
+  --tv-z-canvas: -1;
+  --tv-z-content: 1;
+  --tv-z-nav: 50;
+  --tv-z-modal: 100;
+}
+
+/* ─── Reset & base ─── */
+html {
+  scroll-behavior: auto; /* Lenis will handle smooth scrolling */
+}
+
+body {
+  margin: 0;
+  background: var(--tv-bg);
+  color: var(--tv-text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(57, 217, 138, 0.25);
+  color: var(--tv-text-primary);
+}
+
+/* ─── Shell — isolates the 3D canvas behind all content ─── */
+.tv-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+.tv-shell::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(rgba(57, 217, 138, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 217, 138, 0.06) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 90%);
+  z-index: var(--tv-z-canvas);
+}
+
+/* ─── Typography ─── */
+.tv-heading {
+  font-family: var(--font-space-grotesk), sans-serif;
+  letter-spacing: -0.04em;
+  color: var(--tv-text-primary);
+}
+
+.tv-mono {
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+.tv-glow {
+  text-shadow: 0 0 18px rgba(57, 217, 138, 0.32);
+}
+
+.tv-glow-cyan {
+  text-shadow: 0 0 18px rgba(107, 239, 215, 0.32);
+}
+
+/* ─── Glass surfaces ─── */
+.tv-glass {
+  background: linear-gradient(
+    180deg,
+    rgba(16, 30, 26, 0.82),
+    rgba(11, 23, 20, 0.88)
+  );
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid var(--tv-border);
+  box-shadow: var(--tv-shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* ─── Card system ─── */
+.tv-card {
+  border: 1px solid var(--tv-border);
+  background: linear-gradient(180deg, rgba(16, 30, 26, 0.72), rgba(11, 23, 20, 0.82));
+  box-shadow: var(--tv-shadow-lg);
+  border-radius: 1.5rem;
+  transition: box-shadow 400ms ease, border-color 400ms ease, transform 400ms ease;
+}
+
+.tv-card:hover {
+  box-shadow: var(--tv-shadow-depth);
+  border-color: rgba(57, 217, 138, 0.12);
+}
+
+.tv-card-cyan {
+  border: 1px solid rgba(107, 239, 215, 0.18);
+  box-shadow: 0 0 0 1px rgba(107, 239, 215, 0.08), var(--tv-shadow-lg);
+}
+
+.tv-card-cyan:hover {
+  box-shadow: 0 0 0 1px rgba(107, 239, 215, 0.14), var(--tv-shadow-depth),
+    0 0 30px rgba(107, 239, 215, 0.08);
+}
+
+/* ─── Buttons ─── */
+.tv-button {
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tv-button:hover {
+  transform: translateY(-2px);
+}
+
+.tv-button:active {
+  transform: translateY(0);
+}
+
+.tv-button-primary {
+  background: linear-gradient(135deg, rgba(57, 217, 138, 0.18), rgba(33, 108, 103, 0.24));
+  border: 1px solid rgba(57, 217, 138, 0.32);
+  box-shadow: 0 0 20px rgba(57, 217, 138, 0.12);
+}
+
+.tv-button-primary:hover {
+  box-shadow: 0 0 28px rgba(57, 217, 138, 0.22);
+  background: linear-gradient(135deg, rgba(57, 217, 138, 0.24), rgba(33, 108, 103, 0.32));
+  border-color: rgba(57, 217, 138, 0.42);
+}
+
+.tv-button-secondary {
+  background: linear-gradient(135deg, rgba(249, 163, 200, 0.14), rgba(77, 19, 57, 0.28));
+  border: 1px solid rgba(249, 163, 200, 0.26);
+}
+
+.tv-button-secondary:hover {
+  box-shadow: 0 0 22px rgba(249, 163, 200, 0.16);
+  border-color: rgba(249, 163, 200, 0.36);
+}
+
+/* ─── Tags / badges ─── */
+.tv-tag {
+  border: 1px solid var(--tv-border);
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.tv-tag:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--tv-border-strong);
+}
+
+/* ─── Divider ─── */
+.tv-divider {
+  background: linear-gradient(90deg, transparent, var(--tv-border), transparent);
+}
+
+/* ─── Glow effects ─── */
+.tv-glow-ring {
+  box-shadow: 0 0 0 1px rgba(57, 217, 138, 0.15),
+    0 0 20px rgba(57, 217, 138, 0.08);
+}
+
+.tv-glow-ring-strong {
+  box-shadow: 0 0 0 1px rgba(57, 217, 138, 0.25),
+    0 0 30px rgba(57, 217, 138, 0.14);
+}
+
+/* ─── Scroll-reveal animations ─── */
+.tv-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.tv-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Hero entrance ─── */
+@keyframes tv-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tv-hero-in {
+  animation: tv-hero-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ─── Ambient glow blobs (now handled by 3D) ─── */
+.tv-glow-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: var(--tv-z-canvas);
+}
+
+/* ─── 3D Canvas layer ─── */
+.tv-canvas-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--tv-z-canvas);
+  pointer-events: none;
+}
+
+.tv-canvas-layer canvas {
+  pointer-events: none;
+}
+
+/* ─── Content layer (above canvas) ─── */
+.tv-content-layer {
+  position: relative;
+  z-index: var(--tv-z-content);
+}
+
+/* ─── Section labels ─── */
+.tv-section-label {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  color: var(--tv-text-muted);
+  opacity: 0.7;
+}
+
+/* ─── Premium card tilt effect ─── */
+.premium-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+@media (hover: none) {
+  .premium-card {
+    transform: none !important;
+  }
+}
+
+/* ─── Custom cursor ─── */
+.custom-cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(57, 217, 138, 0.8);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+}
+
+.custom-cursor.hover {
+  width: 32px;
+  height: 32px;
+  background: rgba(57, 217, 138, 0.2);
+  border: 1px solid rgba(57, 217, 138, 0.6);
+}
+
+@media (max-width: 1024px) {
+  .custom-cursor {
+    display: none;
+  }
+}
+
+/* ─── Leaflet map customization ─── */
+.leaflet-container {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background: #040a08 !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(7, 17, 15, 0.82) !important;
+  color: var(--tv-text-muted) !important;
+  font-size: 0.7rem !important;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(57, 217, 138, 0.8) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: rgba(11, 23, 20, 0.95) !important;
+  border: 1px solid var(--tv-border) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: var(--tv-shadow-md) !important;
+}
+
+.leaflet-popup-content {
+  color: var(--tv-text-primary) !important;
+  font-family: var(--font-jetbrains-mono), monospace !important;
+  font-size: 0.75rem !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(11, 23, 20, 0.95) !important;
+}
+
+/* ─── Custom animations ─── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.05); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 4.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+/* ─── Section separators ─── */
+.section-divider {
+  border-top: 1px solid var(--tv-border-section);
+  margin: 5rem 0;
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tv-primary), transparent);
+}
