@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { SiteHeader } from '@/components/site-header';
-import { LivingBackground } from '@/components/3d/LivingBackground';
+import { ScrollScene } from '@/components/3d/ScrollScene';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { CustomCursor } from '@/components/ui/CustomCursor';
 import { Footer } from '@/components/ui/Footer';
@@ -36,7 +36,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${inter.variable} ${jetBrainsMono.variable} tv-shell`}>
         <LenisProvider>
-          <LivingBackground />
+          <ScrollScene />
           <CustomCursor />
           <SiteHeader />
           <div className="tv-content-layer">{children}</div>
