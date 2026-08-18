@@ -6,6 +6,15 @@
  * "station": a point in space the camera flies through at a known scroll
  * progress. Scrolling never fades a background in or out — it physically moves
  * a real perspective camera down the corridor.
+ *
+ * Storytelling arc (mirrors the homepage section order):
+ *   hero       → The Beginning      — introduce Tech Vriksh
+ *   community  → The People         — who is here and what they get
+ *   highlights → The Experience     — what sessions actually look like
+ *   events     → The Opportunity    — what is happening right now
+ *   projects   → The Creation       — what members have built
+ *   india      → The Expansion      — the community across India
+ *   cta        → Your Turn          — join
  */
 
 import * as THREE from 'three';
@@ -34,13 +43,62 @@ export const JOURNEY_START_Z = 8;
  * what makes the parallax read as motion rather than a zoom.
  */
 export const STATIONS: JourneyStation[] = [
-  { id: 'hero', label: 'Build. Learn. Grow.', position: [0, 0, -STATION_SPACING * 0], gate: [6.4, 4.0], accent: 'primary' },
-  { id: 'community', label: 'People. Ideas. Opportunities.', position: [-2.6, 0.9, -STATION_SPACING * 1], gate: [5.8, 3.6], accent: 'light' },
-  { id: 'highlights', label: 'Sessions', position: [2.4, -1.1, -STATION_SPACING * 2], gate: [6.6, 4.2], accent: 'primary' },
-  { id: 'recap', label: '2025 Recap', position: [0, 1.4, -STATION_SPACING * 3], gate: [7.2, 4.6], accent: 'cyan' },
-  { id: 'events', label: "What's happening", position: [-2.2, -0.8, -STATION_SPACING * 4], gate: [6.0, 3.8], accent: 'light' },
-  { id: 'india', label: 'Across India', position: [2.8, 0.6, -STATION_SPACING * 5], gate: [6.2, 4.0], accent: 'primary' },
-  { id: 'cta', label: 'Join Tech Vriksh', position: [0, 0, -STATION_SPACING * 6], gate: [8.0, 5.0], accent: 'light' }
+  {
+    id: 'hero',
+    label: 'The Beginning — Build. Learn. Grow.',
+    position: [0, 0, -STATION_SPACING * 0],
+    gate: [6.4, 4.0],
+    accent: 'primary',
+  },
+  {
+    id: 'community',
+    label: 'The People — who make it real',
+    position: [-2.6, 0.9, -STATION_SPACING * 1],
+    gate: [5.8, 3.6],
+    accent: 'light',
+  },
+  {
+    id: 'highlights',
+    label: 'The Experience — what sessions look like',
+    position: [2.4, -1.1, -STATION_SPACING * 2],
+    gate: [6.6, 4.2],
+    accent: 'primary',
+  },
+  {
+    id: 'events',
+    label: "The Opportunity — what's happening now",
+    position: [-2.2, -0.8, -STATION_SPACING * 3],
+    gate: [6.0, 3.8],
+    accent: 'cyan',
+  },
+  {
+    id: 'projects',
+    label: 'The Creation — built by the community',
+    position: [2.0, 1.0, -STATION_SPACING * 4],
+    gate: [6.4, 4.0],
+    accent: 'light',
+  },
+  {
+    id: 'recap',
+    label: '2025 Recap — a year in one video',
+    position: [0, 1.4, -STATION_SPACING * 5],
+    gate: [7.2, 4.6],
+    accent: 'primary',
+  },
+  {
+    id: 'india',
+    label: 'The Expansion — across India',
+    position: [2.8, 0.6, -STATION_SPACING * 6],
+    gate: [6.2, 4.0],
+    accent: 'light',
+  },
+  {
+    id: 'cta',
+    label: 'Your Turn — join Tech Vriksh',
+    position: [0, 0, -STATION_SPACING * 7],
+    gate: [8.0, 5.0],
+    accent: 'primary',
+  },
 ];
 
 /** Furthest point the camera reaches. */

@@ -1,96 +1,65 @@
 'use client';
 
 import { Reveal } from '@/components/reveal';
+import { communityJoinUrl } from '@/app/data';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Community project data structure.
+//
+// TODO: Populate with real community projects. Good sources:
+//   - HackVriksh submissions (Oct 2025)
+//   - Projects built during workshops
+//   - Side projects members want to share
+//
+// Do NOT add a project entry without a real GitHub URL or demo link.
+// Do NOT invent project names, descriptions, or creator names.
+// ─────────────────────────────────────────────────────────────────────────────
 
 export interface CommunityProject {
   name: string;
   description: string;
-  creators: string[]; // array of creator names
-  stack: string[]; // tech stack
-  category: string; // e.g., "AI", "Web", "Mobile"
-  event?: string; // associated hackathon/event if applicable
+  /** Member names exactly as known. */
+  creators: string[];
+  /** Only list technologies actually used. */
+  stack: string[];
+  /** Context if built at an event. */
+  context?: string;
   status: 'building' | 'completed' | 'live';
   githubUrl?: string;
   demoUrl?: string;
-  image?: string;
+  /** Set to true until replaced with a real project. */
+  isPlaceholder: boolean;
 }
 
-// TODO: Replace with real community projects from database/CMS
-const placeholderProjects: CommunityProject[] = [
+// PLACEHOLDER ENTRIES — none of these are real projects.
+// Replace with actual community work as projects are shared.
+const projects: CommunityProject[] = [
   {
-    name: 'AI Resume Analyzer',
-    description: 'Smart resume analysis tool that provides actionable feedback using GPT-4 and custom ML models. Helps students optimize their resumes for ATS systems.',
-    creators: ['Priya Sharma', 'Arjun Verma', 'Rahul Singh'],
-    stack: ['Python', 'Next.js', 'OpenAI', 'TailwindCSS'],
-    category: 'AI',
-    event: 'Winter Hackathon 2024',
-    status: 'live',
-    githubUrl: 'https://github.com/placeholder',
-    demoUrl: 'https://demo.placeholder.com',
-    image: undefined, // Will use gradient placeholder
-  },
-  {
-    name: 'Community Event Platform',
-    description: 'Full-featured event management system built specifically for tech communities. Includes RSVP tracking, live polls, and speaker management.',
-    creators: ['Sneha Gupta', 'Amit Kumar'],
-    stack: ['React', 'Node.js', 'MongoDB', 'Socket.io'],
-    category: 'Web',
-    status: 'completed',
-    githubUrl: 'https://github.com/placeholder',
-    image: undefined,
-  },
-  {
-    name: 'Open Source Contribution Tracker',
-    description: 'Track your open source contributions across GitHub, GitLab, and Bitbucket. Visualize your impact with beautiful charts and insights.',
-    creators: ['Vikram Patel'],
-    stack: ['Next.js', 'TypeScript', 'GitHub API', 'Chart.js'],
-    category: 'Web',
-    status: 'live',
-    githubUrl: 'https://github.com/placeholder',
-    demoUrl: 'https://demo.placeholder.com',
-    image: undefined,
-  },
-  {
-    name: 'Mobile Expense Manager',
-    description: 'Beautiful cross-platform expense tracking app with budget alerts, category insights, and cloud sync. Built with performance in mind.',
-    creators: ['Anjali Desai', 'Karan Mehta'],
-    stack: ['React Native', 'Firebase', 'Redux', 'Native Base'],
-    category: 'Mobile',
-    event: 'Code Sprint 2024',
+    name: '—',
+    description: '',
+    creators: [],
+    stack: [],
     status: 'building',
-    githubUrl: 'https://github.com/placeholder',
-    image: undefined,
+    isPlaceholder: true,
   },
   {
-    name: 'Smart Campus Navigator',
-    description: 'AI-powered campus navigation with indoor mapping, class schedules integration, and real-time crowd density tracking.',
-    creators: ['Rohan Joshi', 'Neha Kapoor', 'Siddharth Agarwal', 'Pooja Reddy'],
-    stack: ['Python', 'React', 'TensorFlow', 'Google Maps API'],
-    category: 'AI',
+    name: '—',
+    description: '',
+    creators: [],
+    stack: [],
     status: 'building',
-    image: undefined,
+    isPlaceholder: true,
   },
   {
-    name: 'Tech Blog Platform',
-    description: 'Modern MDX-powered blogging platform with syntax highlighting, reading time estimates, and SEO optimization. Perfect for technical writers.',
-    creators: ['Divya Iyer'],
-    stack: ['Next.js', 'MDX', 'TailwindCSS', 'Vercel'],
-    category: 'Web',
-    status: 'live',
-    githubUrl: 'https://github.com/placeholder',
-    demoUrl: 'https://demo.placeholder.com',
-    image: undefined,
+    name: '—',
+    description: '',
+    creators: [],
+    stack: [],
+    status: 'building',
+    isPlaceholder: true,
   },
 ];
 
-// Gradient backgrounds for projects without images
-const categoryGradients: Record<string, string> = {
-  AI: 'from-[color:var(--tv-primary)]/20 via-[color:var(--tv-cyan)]/15 to-[color:var(--tv-bg-secondary)]',
-  Web: 'from-[color:var(--tv-cyan)]/20 via-[color:var(--tv-primary)]/15 to-[color:var(--tv-bg-secondary)]',
-  Mobile: 'from-[color:var(--tv-magenta)]/20 via-[color:var(--tv-primary)]/15 to-[color:var(--tv-bg-secondary)]',
-};
-
-// Status colors
 const statusConfig = {
   building: {
     label: 'In Progress',
@@ -106,40 +75,55 @@ const statusConfig = {
   },
   live: {
     label: 'Live',
-    color: 'text-[color:var(--tv-magenta)]',
-    bg: 'bg-[color:var(--tv-magenta)]/10',
-    border: 'border-[color:var(--tv-magenta)]/30',
+    color: 'text-[color:var(--tv-primary)]',
+    bg: 'bg-[color:var(--tv-primary)]/10',
+    border: 'border-[color:var(--tv-primary)]/30',
   },
 };
 
 export function ProjectShowcase() {
-  const [featuredProject, ...otherProjects] = placeholderProjects;
+  const allPlaceholder = projects.every((p) => p.isPlaceholder);
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
-        <div className="mb-16 space-y-4 text-center">
+        {/* Section header */}
+        <div className="mb-16">
           <div className="tv-section-label">BUILT BY THE COMMUNITY</div>
-          <h2 className="tv-heading text-4xl sm:text-5xl lg:text-6xl">
-            REAL PROJECTS BY REAL MEMBERS
-          </h2>
-          <p className="mx-auto max-w-2xl text-base text-[color:var(--tv-text-secondary)] sm:text-lg">
-            From hackathons to personal passion projects, see what our community is building
-          </p>
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <h2 className="tv-heading text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">
+              We don't just
+              <br />
+              talk about it.
+            </h2>
+            <p className="max-w-sm text-sm leading-relaxed text-[color:var(--tv-text-secondary)]">
+              When members build something real — during a hackathon, a workshop, or on their own — it belongs here.
+            </p>
+          </div>
         </div>
       </Reveal>
 
       <div className="space-y-6">
-        {/* Featured Project - Larger card */}
-        <Reveal delay={0}>
-          <ProjectCard project={featuredProject} featured />
+        {/* Featured slot */}
+        <Reveal>
+          {allPlaceholder ? (
+            <FeaturedPlaceholder />
+          ) : (
+            projects[0] && !projects[0].isPlaceholder && (
+              <ProjectCard project={projects[0]} featured />
+            )
+          )}
         </Reveal>
 
-        {/* Grid of other projects */}
+        {/* Grid of secondary projects */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {otherProjects.map((project, index) => (
-            <Reveal key={project.name} delay={(index + 1) * 100}>
-              <ProjectCard project={project} />
+          {projects.slice(1).map((project, index) => (
+            <Reveal key={index} delay={(index + 1) * 80}>
+              {project.isPlaceholder ? (
+                <SecondaryPlaceholder index={index + 1} />
+              ) : (
+                <ProjectCard project={project} />
+              )}
             </Reveal>
           ))}
         </div>
@@ -148,6 +132,84 @@ export function ProjectShowcase() {
   );
 }
 
+/* ─── Placeholder components ─────────────────────────────────────────────── */
+
+function FeaturedPlaceholder() {
+  return (
+    <div className="relative overflow-hidden rounded-[2rem] border border-dashed border-[color:var(--tv-primary)]/20 bg-gradient-to-br from-[color:var(--tv-surface)] to-[color:var(--tv-bg-secondary)]">
+      {/* Background texture */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(57,217,138,0.04),transparent_60%)]" />
+
+      <div className="relative grid gap-8 p-8 sm:p-12 lg:grid-cols-2 lg:items-center">
+        {/* Left — concept visual */}
+        <div className="flex h-48 items-center justify-center rounded-[1.5rem] border border-dashed border-[color:var(--tv-border)]/60 bg-[color:var(--tv-bg-secondary)]/50 sm:h-64 lg:h-72">
+          <div className="text-center">
+            {/* Stylised brackets icon */}
+            <div className="tv-heading mb-3 text-4xl text-[color:var(--tv-primary)]/20 sm:text-5xl">
+              {'</>'}
+            </div>
+            <p className="tv-mono text-xs uppercase tracking-[0.24em] text-[color:var(--tv-text-muted)]/60">
+              Featured project
+            </p>
+          </div>
+        </div>
+
+        {/* Right — copy */}
+        <div className="space-y-5">
+          <div className="tv-mono text-xs uppercase tracking-[0.28em] text-[color:var(--tv-primary)]/60">
+            Coming soon
+          </div>
+          <h3 className="tv-heading text-2xl tracking-[-0.03em] text-[color:var(--tv-text-primary)] sm:text-3xl">
+            The first featured project will appear here.
+          </h3>
+          <p className="text-sm leading-[1.8] text-[color:var(--tv-text-secondary)]">
+            This slot is for the most significant thing a Tech Vriksh member has built — a hackathon winner,
+            a live tool, or a project that genuinely solves a problem. When that project exists, it goes here.
+          </p>
+          <a
+            href={communityJoinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tv-button tv-button-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-[color:var(--tv-text-primary)]"
+            data-cursor-hover
+          >
+            Join and build something →
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SecondaryPlaceholder({ index }: { index: number }) {
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-dashed border-[color:var(--tv-border)]/50 bg-[color:var(--tv-surface)]/50 p-6">
+      <div className="mb-4 flex h-32 items-center justify-center rounded-[1rem] border border-dashed border-[color:var(--tv-border)]/40 bg-[color:var(--tv-bg-secondary)]/40">
+        <span className="tv-mono text-xs uppercase tracking-[0.24em] text-[color:var(--tv-text-muted)]/40">
+          Project #{index + 1}
+        </span>
+      </div>
+      <div className="space-y-2">
+        <div className="h-5 w-3/4 rounded-md bg-[color:var(--tv-border)]/30" />
+        <div className="h-4 w-full rounded-md bg-[color:var(--tv-border)]/20" />
+        <div className="h-4 w-2/3 rounded-md bg-[color:var(--tv-border)]/20" />
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {['Stack', 'Tags', 'Here'].map((t) => (
+          <span
+            key={t}
+            className="tv-mono rounded-md border border-[color:var(--tv-border)]/30 bg-[color:var(--tv-bg-secondary)]/30 px-2.5 py-1 text-xs text-[color:var(--tv-text-muted)]/40"
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Real project card ───────────────────────────────────────────────────── */
+
 interface ProjectCardProps {
   project: CommunityProject;
   featured?: boolean;
@@ -155,120 +217,67 @@ interface ProjectCardProps {
 
 function ProjectCard({ project, featured = false }: ProjectCardProps) {
   const status = statusConfig[project.status];
-  const gradient = categoryGradients[project.category] || categoryGradients.Web;
 
   return (
     <div
-      className={`tv-card group relative flex flex-col overflow-hidden hover:scale-[1.02] ${
-        featured ? 'lg:col-span-2' : ''
+      className={`group relative flex flex-col overflow-hidden rounded-[1.5rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[color:var(--tv-surface)] to-[color:var(--tv-bg-secondary)] transition-all duration-500 hover:-translate-y-1 hover:border-[color:var(--tv-primary)]/30 hover:shadow-[0_20px_56px_rgba(0,0,0,0.5)] ${
+        featured ? 'lg:flex-row' : ''
       }`}
     >
-      {/* Category Badge - Top Right Corner */}
-      <div className="absolute right-4 top-4 z-10">
-        <span className="tv-tag rounded-lg px-3 py-1.5 text-xs font-medium text-[color:var(--tv-text-secondary)] backdrop-blur-sm">
-          {project.category}
-        </span>
-      </div>
-
-      {/* Project Image/Gradient */}
+      {/* Gradient visual */}
       <div
-        className={`relative overflow-hidden ${
-          featured ? 'h-64 sm:h-80' : 'h-48'
+        className={`relative flex-shrink-0 bg-gradient-to-br from-[color:var(--tv-primary)]/20 via-[color:var(--tv-cyan)]/10 to-[color:var(--tv-bg-secondary)] ${
+          featured ? 'h-48 lg:h-auto lg:w-2/5' : 'h-40'
         }`}
       >
-        {project.image ? (
-          <img
-            src={project.image}
-            alt={project.name}
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-        ) : (
-          <div
-            className={`h-full w-full bg-gradient-to-br ${gradient} transition-all duration-700 group-hover:scale-110`}
-          />
-        )}
-
-        {/* Gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--tv-bg-secondary)]/95 via-[color:var(--tv-bg-secondary)]/40 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-80" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="tv-heading text-3xl text-[color:var(--tv-primary)]/20">{'</>'}</span>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--tv-bg-secondary)]/80 to-transparent" />
       </div>
 
-      {/* Project Content */}
-      <div className="relative flex flex-1 flex-col space-y-4 p-6">
-        {/* Event Badge (if applicable) */}
-        {project.event && (
-          <div className="flex items-center gap-2">
-            <svg
-              className="h-4 w-4 text-[color:var(--tv-primary)]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span className="tv-mono text-xs text-[color:var(--tv-primary)]">
-              {project.event}
-            </span>
+      {/* Content */}
+      <div className={`flex flex-1 flex-col space-y-4 p-6 ${featured ? 'sm:p-8' : ''}`}>
+        {/* Context badge */}
+        {project.context && (
+          <div className="tv-mono text-xs text-[color:var(--tv-primary)]">
+            ↳ {project.context}
           </div>
         )}
 
-        {/* Project Name */}
-        <h3
-          className={`tv-heading text-[color:var(--tv-text-primary)] ${
-            featured ? 'text-2xl sm:text-3xl' : 'text-xl'
-          }`}
-        >
+        {/* Name */}
+        <h3 className={`tv-heading text-[color:var(--tv-text-primary)] ${featured ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
           {project.name}
         </h3>
 
         {/* Description */}
-        <p
-          className={`flex-1 leading-relaxed text-[color:var(--tv-text-secondary)] ${
-            featured ? 'text-base' : 'text-sm'
-          }`}
-        >
-          {project.description}
-        </p>
+        {project.description && (
+          <p className={`flex-1 leading-relaxed text-[color:var(--tv-text-secondary)] ${featured ? 'text-base' : 'text-sm'}`}>
+            {project.description}
+          </p>
+        )}
 
-        {/* Tech Stack */}
-        <div className="flex flex-wrap gap-2">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className="tv-mono rounded-md border border-[color:var(--tv-border)] bg-[color:var(--tv-bg-secondary)]/50 px-2.5 py-1 text-xs text-[color:var(--tv-text-muted)] transition-colors duration-300 hover:border-[color:var(--tv-primary)]/30 hover:text-[color:var(--tv-text-secondary)]"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        {/* Footer: Creators, Status, Links */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[color:var(--tv-border-subtle)] pt-4">
-          {/* Creators */}
-          <div className="flex items-center gap-2">
-            <svg
-              className="h-4 w-4 text-[color:var(--tv-text-muted)]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-            <span className="text-sm text-[color:var(--tv-text-muted)]">
-              {project.creators.length} {project.creators.length === 1 ? 'creator' : 'creators'}
-            </span>
+        {/* Stack */}
+        {project.stack.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {project.stack.map((tech) => (
+              <span
+                key={tech}
+                className="tv-mono rounded-md border border-[color:var(--tv-border)] bg-[color:var(--tv-bg-secondary)]/50 px-2.5 py-1 text-xs text-[color:var(--tv-text-muted)] transition-colors hover:text-[color:var(--tv-text-secondary)]"
+              >
+                {tech}
+              </span>
+            ))}
           </div>
+        )}
 
-          {/* Status Badge */}
+        {/* Footer */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[color:var(--tv-border-subtle)] pt-4">
+          {project.creators.length > 0 && (
+            <span className="text-sm text-[color:var(--tv-text-muted)]">
+              Built by {project.creators.join(', ')}
+            </span>
+          )}
           <span
             className={`tv-mono rounded-md border px-2.5 py-1 text-xs font-medium ${status.color} ${status.bg} ${status.border}`}
           >
@@ -276,7 +285,7 @@ function ProjectCard({ project, featured = false }: ProjectCardProps) {
           </span>
         </div>
 
-        {/* Action Links */}
+        {/* Action links — only shown when real URLs exist */}
         {(project.githubUrl || project.demoUrl) && (
           <div className="flex gap-3">
             {project.githubUrl && (
@@ -284,16 +293,9 @@ function ProjectCard({ project, featured = false }: ProjectCardProps) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tv-button flex flex-1 items-center justify-center gap-2 rounded-lg border border-[color:var(--tv-border)] bg-[color:var(--tv-bg-secondary)]/50 px-4 py-2.5 text-sm font-medium text-[color:var(--tv-text-secondary)] transition-all duration-300 hover:border-[color:var(--tv-primary)]/30 hover:bg-[color:var(--tv-primary)]/5 hover:text-[color:var(--tv-text-primary)]"
+                className="tv-button flex flex-1 items-center justify-center gap-2 rounded-lg border border-[color:var(--tv-border)] bg-[color:var(--tv-bg-secondary)]/50 px-4 py-2.5 text-sm font-medium text-[color:var(--tv-text-secondary)] hover:border-[color:var(--tv-primary)]/30 hover:text-[color:var(--tv-text-primary)]"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                </svg>
-                Code
+                View Code →
               </a>
             )}
             {project.demoUrl && (
@@ -303,20 +305,7 @@ function ProjectCard({ project, featured = false }: ProjectCardProps) {
                 rel="noopener noreferrer"
                 className="tv-button tv-button-primary flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[color:var(--tv-text-primary)]"
               >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                  />
-                </svg>
-                Live Demo
+                View Project →
               </a>
             )}
           </div>

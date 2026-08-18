@@ -46,6 +46,34 @@ export type TeamMember = {
   linkedinUrl: string;
 };
 
+// ─── Community story type ────────────────────────────────────────────────────
+// Populate with real member experiences. Do not fabricate stories.
+export type CommunityStoryData = {
+  name: string;
+  role: string;
+  quote: string;
+  participatedIn: string;
+  takeaway: string;
+  initials: string;
+  linkedIn?: string;
+  github?: string;
+  isPlaceholder: boolean;
+};
+
+// ─── Community project type ──────────────────────────────────────────────────
+// Only add entries with real GitHub or demo URLs.
+export type CommunityProjectData = {
+  name: string;
+  description: string;
+  creators: string[];
+  stack: string[];
+  context?: string;
+  status: 'building' | 'completed' | 'live';
+  githubUrl?: string;
+  demoUrl?: string;
+  isPlaceholder: boolean;
+};
+
 export type TeamDepartment = {
   department: string;
   summary: string;
@@ -563,4 +591,60 @@ export const teamDepartments: TeamDepartment[] = [
       }
     ]
   }
+];
+
+// ─── Community journey milestones ───────────────────────────────────────────
+// Derived from actual Tech Vriksh events — do not add milestones without
+// a corresponding real event, date, or verifiable fact.
+export type JourneyMilestoneData = {
+  period: string;
+  title: string;
+  description: string;
+  isFuture?: boolean;
+};
+
+export const journeyMilestones: JourneyMilestoneData[] = [
+  {
+    period: 'Feb – Mar 2025',
+    title: 'First Workshops',
+    description:
+      'Online sessions on Data Science, Generative AI, and career guidance. The first attempts at practical, structured learning for the community.',
+  },
+  {
+    period: 'Apr – May 2025',
+    title: 'Regular Rhythm',
+    description:
+      'Web development, neural networks, research skills, and the AI Rap Battle workshop. Regular sessions started pulling a consistent audience.',
+  },
+  {
+    period: 'May 2025',
+    title: 'First Offline — Techpath 1.O',
+    description:
+      'An offline direction-setting session at a Noida campus — helping students connect their current skills to a practical next step.',
+  },
+  {
+    period: 'Oct 2025',
+    title: 'HackVriksh',
+    description:
+      'The flagship hackathon. Practical problem solving, mentor feedback, and a format built to continue after the event ended.',
+  },
+  {
+    period: 'Nov 2025',
+    title: 'Tech Baithak',
+    description:
+      'An informal discussion evening — peer questions, open conversation, and no slide decks. The community talking to itself.',
+  },
+  {
+    period: 'Jun 2026',
+    title: 'Ctrl + Future — Offline at OpsTree Global',
+    description:
+      '80–90 attendees at OpsTree Global, Noida. Four sessions: career guidance (Microsoft MVP), OSINT and cybersecurity, AI agents, and open discussion.',
+  },
+  {
+    period: 'What\'s next',
+    title: 'Your chapter',
+    description:
+      'More events, more builders, more states. If you are reading this, the next milestone could involve you.',
+    isFuture: true,
+  },
 ];

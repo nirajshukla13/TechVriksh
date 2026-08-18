@@ -6,7 +6,7 @@ import { DriveVideoEmbed } from '@/components/drive-video-embed';
 import { IndiaMapLoader } from '@/components/india-map-loader';
 import { PremiumCard, CardImage, CardBadge } from '@/components/ui/PremiumCard';
 import { HeroVisual } from '@/components/ui/HeroVisual';
-import { ValueProposition, CommunityStories, ProjectShowcase, CommunityJourney } from '@/components/sections';
+import { ValueProposition, CommunityStories, ProjectShowcase, JourneyColumn } from '@/components/sections';
 import { communityGalleryPhotos, events, stateMembers, communityJoinUrl } from './data';
 
 export default function HomePage() {
@@ -26,7 +26,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           01 — HERO
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto min-h-screen flex items-center w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+      <section data-station="hero" className="mx-auto min-h-screen flex items-center w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="grid w-full gap-12 lg:grid-cols-2 lg:items-center">
           <div className="tv-hero-in space-y-8">
             <div className="space-y-4">
@@ -82,7 +82,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           02 — COMMUNITY STATS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="community" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
           <div className="section-backdrop">
             <div className="mb-12 max-w-2xl">
@@ -138,10 +138,10 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           03 — RECENT HIGHLIGHTS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="highlights" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
           <div className="section-backdrop mb-8">
-            <div className="tv-section-label">Highlights</div>
+            <div className="tv-section-label"></div>
             <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
               What our sessions<br />actually look like
             </h2>
@@ -192,12 +192,12 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           04 — FEATURED EVENTS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="events" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
           <div className="section-backdrop">
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <div className="tv-section-label">Events</div>
+                <div className="tv-section-label"></div>
                 <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
                   What's happening
                 </h2>
@@ -277,7 +277,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           07 — 2025 RECAP
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="recap" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
           <div className="section-backdrop">
             <div className="mb-8 max-w-2xl">
@@ -303,21 +303,50 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          08 — COMMUNITY JOURNEY
+          08 — BRAND + COMMUNITY JOURNEY (two-column)
       ═══════════════════════════════════════════ */}
-      <CommunityJourney />
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
+
+          {/* ── LEFT COLUMN — Tech Vriksh brand / community context ── */}
+          <div className="flex flex-col gap-6 lg:w-[40%] lg:sticky lg:top-24">
+            <Reveal>
+              <div className="space-y-4">
+                <div className="tv-section-label">TECH VRIKSH</div>
+                <h2 className="tv-heading text-3xl tracking-[-0.04em] leading-tight sm:text-4xl lg:text-[2.6rem]">
+                  A growing student-driven technology community.
+                </h2>
+                <p className="text-base leading-relaxed text-[color:var(--tv-text-secondary)]">
+                  Founded by{' '}
+                  <span className="text-[color:var(--tv-text-primary)] font-medium">Krishna Agarwal</span>,
+                  Tech Vriksh connects students and builders through practical workshops, hackathons,
+                  collaborative learning, and hands-on projects.
+                </p>
+                <p className="text-sm leading-relaxed text-[color:var(--tv-text-muted)]">
+                  Bridging the gap between classroom theory and real-world tech through honest community-driven exposure.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ── RIGHT COLUMN — Streamlined Journey timeline ── */}
+          <div className="lg:w-[60%]">
+            <JourneyColumn />
+          </div>
+        </div>
+      </section>
 
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
           09 — INDIA COMMUNITY MAP
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="india" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
           <div className="section-backdrop">
             <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
               <div className="max-w-md">
-                <div className="tv-section-label">India</div>
+                <div className="tv-section-label"></div>
                 <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
                   Our community<br />across India
                 </h2>
@@ -340,13 +369,13 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           10 — FINAL CTA
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section data-station="cta" className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.06] to-transparent p-12 text-center sm:p-16">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.12),transparent_70%)]" />
             
             <div className="relative">
-              <div className="tv-section-label">Your Turn</div>
+              <div className="tv-section-label"></div>
               <h2 className="tv-heading mt-6 text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">
                 YOUR TURN.
               </h2>
