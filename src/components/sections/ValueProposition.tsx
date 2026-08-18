@@ -33,19 +33,19 @@ const valueCards: ValueCard[] = [
 
 export function ValueProposition() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
-        <div className="mb-16 space-y-4 text-center">
-          <div className="tv-section-label">MORE THAN A COMMUNITY</div>
-          <h2 className="tv-heading text-4xl sm:text-5xl lg:text-6xl">
-            What You Get
-          </h2>
-        </div>
-      </Reveal>
+        <div className="section-backdrop">
+          <div className="mb-16 space-y-4 text-center">
+            <div className="tv-section-label">MORE THAN A COMMUNITY</div>
+            <h2 className="tv-heading text-4xl sm:text-5xl lg:text-6xl">
+              What You Get
+            </h2>
+          </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {valueCards.map((card, index) => (
-          <Reveal key={card.number} delay={index * 100}>
+          <Reveal key={card.number} delay={index * 50}>
             <div className="tv-card group relative h-full p-8 hover:scale-[1.02]">
               {/* Subtle gradient overlay */}
               <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-br from-[color:var(--tv-primary)]/0 to-[color:var(--tv-primary)]/0 opacity-0 transition-opacity duration-500 group-hover:from-[color:var(--tv-primary)]/5 group-hover:to-transparent group-hover:opacity-100" />
@@ -70,6 +70,8 @@ export function ValueProposition() {
           </Reveal>
         ))}
       </div>
+      </div>
+      </Reveal>
     </section>
   );
 }

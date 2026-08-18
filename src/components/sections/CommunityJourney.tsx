@@ -44,7 +44,7 @@ const milestones: JourneyMilestone[] = [
 
 export function CommunityJourney() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
         <div className="mb-20 space-y-4 text-center">
           <div className="tv-section-label">THE JOURNEY</div>
@@ -73,7 +73,7 @@ export function CommunityJourney() {
             const isLeft = index % 2 === 0;
 
             return (
-              <Reveal key={index} delay={index * 100}>
+              <Reveal key={index} delay={index * 50}>
                 <div
                   className={`relative flex flex-col items-start gap-6 lg:flex-row lg:items-center ${
                     isLeft ? 'lg:flex-row-reverse' : ''

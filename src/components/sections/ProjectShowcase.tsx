@@ -116,7 +116,7 @@ export function ProjectShowcase() {
   const [featuredProject, ...otherProjects] = placeholderProjects;
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
         <div className="mb-16 space-y-4 text-center">
           <div className="tv-section-label">BUILT BY THE COMMUNITY</div>

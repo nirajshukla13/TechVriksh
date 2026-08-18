@@ -48,7 +48,7 @@ const placeholderStories: CommunityStory[] = [
 
 export function CommunityStories() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <Reveal>
         <div className="mb-16 space-y-4 text-center">
           <div className="tv-section-label">REAL VOICES, REAL IMPACT</div>
@@ -63,7 +63,7 @@ export function CommunityStories() {
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {placeholderStories.map((story, index) => (
-          <Reveal key={story.name} delay={index * 100}>
+          <Reveal key={story.name} delay={index * 50}>
             <div className="tv-card group relative flex h-full flex-col p-8 hover:scale-[1.02]">
               {/* Subtle gradient overlay on hover */}
               <div className="absolute inset-0 rounded-[1.5rem] bg-gradient-to-br from-[color:var(--tv-primary)]/0 to-[color:var(--tv-primary)]/0 opacity-0 transition-opacity duration-500 group-hover:from-[color:var(--tv-primary)]/5 group-hover:to-transparent group-hover:opacity-100" />

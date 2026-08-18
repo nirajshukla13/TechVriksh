@@ -82,18 +82,19 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           02 — COMMUNITY STATS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="mb-12 max-w-2xl">
-            <div className="tv-section-label">01 — Community</div>
-            <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-              People.<br />
-              Ideas.<br />
-              Opportunities.
-            </h2>
-          </div>
+          <div className="section-backdrop">
+            <div className="mb-12 max-w-2xl">
+              <div className="tv-section-label">Community</div>
+              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
+                People.<br />
+                Ideas.<br />
+                Opportunities.
+              </h2>
+            </div>
 
-          <div className="grid gap-8 sm:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-3">
             <div className="group">
               <div className="tv-heading text-6xl tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:tv-glow sm:text-7xl">
                 <Counter target={totalMembers} suffix="+" />
@@ -121,6 +122,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          </div>
         </Reveal>
       </section>
 
@@ -136,10 +138,10 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           03 — RECENT HIGHLIGHTS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="mb-8">
-            <div className="tv-section-label">02 — Highlights</div>
+          <div className="section-backdrop mb-8">
+            <div className="tv-section-label">Highlights</div>
             <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
               What our sessions<br />actually look like
             </h2>
@@ -190,23 +192,24 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           04 — FEATURED EVENTS
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <div className="tv-section-label">03 — Events</div>
-              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-                What's happening
-              </h2>
+          <div className="section-backdrop">
+            <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <div className="tv-section-label">Events</div>
+                <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
+                  What's happening
+                </h2>
+              </div>
+              <Link
+                href="/events"
+                className="tv-mono text-xs uppercase tracking-[0.24em] text-[color:var(--tv-primary)] hover:opacity-80"
+                data-cursor-hover
+              >
+                View all events →
+              </Link>
             </div>
-            <Link
-              href="/events"
-              className="tv-mono text-xs uppercase tracking-[0.24em] text-[color:var(--tv-primary)] hover:opacity-80"
-              data-cursor-hover
-            >
-              View all events →
-            </Link>
-          </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {featuredEvents.map((event, index) => (
@@ -251,6 +254,7 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
+          </div>
         </Reveal>
       </section>
 
@@ -273,23 +277,25 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           07 — 2025 RECAP
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="mb-8 max-w-2xl">
-            <div className="tv-section-label">05 — Recap</div>
-            <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-              2025 RECAP
-            </h2>
-            <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
-              A year of Tech Vriksh, in one video.
-            </p>
-          </div>
+          <div className="section-backdrop">
+            <div className="mb-8 max-w-2xl">
+              <div className="tv-section-label">Recap</div>
+              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
+                2025 RECAP
+              </h2>
+              <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
+                A year of Tech Vriksh, in one video.
+              </p>
+            </div>
 
           <div className="group relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.04] to-transparent p-4 shadow-[0_24px_64px_rgba(0,0,0,0.4)] transition-shadow duration-500 hover:shadow-[0_32px_80px_rgba(0,0,0,0.5)]">
             <DriveVideoEmbed
               url="https://drive.google.com/file/d/1JWtB2j04oCn8ErjhcTMcHRrq2mwOA6-A/view?usp=drive_link"
               title="Tech Vriksh 2025 year-in-review video"
             />
+          </div>
           </div>
         </Reveal>
       </section>
@@ -306,22 +312,24 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           09 — INDIA COMMUNITY MAP
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-            <div className="max-w-md">
-              <div className="tv-section-label">07 — India</div>
-              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-                Our community<br />across India
-              </h2>
-              <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
-                {stateMembers.length} states and counting — hover a marker to see the count for that state.
-              </p>
-            </div>
+          <div className="section-backdrop">
+            <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+              <div className="max-w-md">
+                <div className="tv-section-label">India</div>
+                <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
+                  Our community<br />across India
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
+                  {stateMembers.length} states and counting — hover a marker to see the count for that state.
+                </p>
+              </div>
 
-            <div className="relative">
-              <div className="pointer-events-none absolute -inset-6 rounded-[2.4rem] bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.08),transparent_60%)] blur-2xl" />
-              <IndiaMapLoader data={stateMembers} />
+              <div className="relative">
+                <div className="pointer-events-none absolute -inset-6 rounded-[2.4rem] bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.08),transparent_60%)] blur-2xl" />
+                <IndiaMapLoader data={stateMembers} />
+              </div>
             </div>
           </div>
         </Reveal>
@@ -332,13 +340,13 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           10 — FINAL CTA
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.06] to-transparent p-12 text-center sm:p-16">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.12),transparent_70%)]" />
             
             <div className="relative">
-              <div className="tv-section-label">08 — Your Turn</div>
+              <div className="tv-section-label">Your Turn</div>
               <h2 className="tv-heading mt-6 text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">
                 YOUR TURN.
               </h2>
