@@ -6,6 +6,7 @@ import { DriveVideoEmbed } from '@/components/drive-video-embed';
 import { IndiaMapLoader } from '@/components/india-map-loader';
 import { PremiumCard, CardImage, CardBadge } from '@/components/ui/PremiumCard';
 import { HeroVisual } from '@/components/ui/HeroVisual';
+import { ValueProposition, CommunityStories, ProjectShowcase, CommunityJourney } from '@/components/sections';
 import { communityGalleryPhotos, events, stateMembers, communityJoinUrl } from './data';
 
 export default function HomePage() {
@@ -41,6 +42,10 @@ export default function HomePage() {
 
             <p className="max-w-lg text-lg leading-relaxed text-[color:var(--tv-text-secondary)]">
               A student-driven technology community connecting people, ideas and opportunities.
+            </p>
+            
+            <p className="max-w-lg text-base leading-relaxed text-[color:var(--tv-text-muted)]">
+              For students who don't want to just watch from the sidelines.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -118,6 +123,13 @@ export default function HomePage() {
           </div>
         </Reveal>
       </section>
+
+      <div className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          02 — VALUE PROPOSITION
+      ═══════════════════════════════════════════ */}
+      <ValueProposition />
 
       <div className="section-divider" />
 
@@ -245,12 +257,26 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          05 — 2025 RECAP
+          05 — PROJECT SHOWCASE
+      ═══════════════════════════════════════════ */}
+      <ProjectShowcase />
+
+      <div className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          06 — COMMUNITY STORIES
+      ═══════════════════════════════════════════ */}
+      <CommunityStories />
+
+      <div className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          07 — 2025 RECAP
       ═══════════════════════════════════════════ */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
           <div className="mb-8 max-w-2xl">
-            <div className="tv-section-label">04 — Recap</div>
+            <div className="tv-section-label">05 — Recap</div>
             <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
               2025 RECAP
             </h2>
@@ -271,13 +297,20 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          06 — INDIA COMMUNITY MAP
+          08 — COMMUNITY JOURNEY
+      ═══════════════════════════════════════════ */}
+      <CommunityJourney />
+
+      <div className="section-divider" />
+
+      {/* ═══════════════════════════════════════════
+          09 — INDIA COMMUNITY MAP
       ═══════════════════════════════════════════ */}
       <section className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
             <div className="max-w-md">
-              <div className="tv-section-label">05 — India</div>
+              <div className="tv-section-label">07 — India</div>
               <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
                 Our community<br />across India
               </h2>
@@ -297,7 +330,7 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          07 — FINAL CTA
+          10 — FINAL CTA
       ═══════════════════════════════════════════ */}
       <section className="mx-auto w-full max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
         <Reveal>
@@ -305,12 +338,12 @@ export default function HomePage() {
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.12),transparent_70%)]" />
             
             <div className="relative">
-              <div className="tv-section-label">06 — Join</div>
+              <div className="tv-section-label">08 — Your Turn</div>
               <h2 className="tv-heading mt-6 text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">
-                Ready to build<br />something together?
+                YOUR TURN.
               </h2>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-[color:var(--tv-text-secondary)]">
-                Tech Vriksh brings together people who want to learn, build and grow.
+                Don't just consume technology. Build with people.
               </p>
               
               <div className="mt-10">
