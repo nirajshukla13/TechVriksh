@@ -68,9 +68,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Hero visual with interactive stats */}
-          <div className="relative hidden lg:block">
-            <div className="aspect-square w-full rounded-[2rem] border border-[color:var(--tv-border)] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.08] to-transparent p-1 shadow-[0_0_40px_rgba(57,217,138,0.08)]">
+          {/* Hero real event visual */}
+          <div className="relative block w-full mt-6 lg:mt-0">
+            <div className="w-full">
               <HeroVisual />
             </div>
           </div>
