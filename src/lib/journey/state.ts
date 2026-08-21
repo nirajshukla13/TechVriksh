@@ -55,7 +55,7 @@ export function initJourneyDriver(): () => void {
       end: 'bottom bottom',
       // Lag is the point: the camera keeps gliding for a beat after the wheel
       // stops, which is what separates this from a scroll-position lookup.
-      scrub: 0.9,
+      scrub: 2.2,
       invalidateOnRefresh: true,
       onUpdate: (self) => {
         journeyState.velocity = self.getVelocity();

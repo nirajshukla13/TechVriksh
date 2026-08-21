@@ -40,8 +40,8 @@ export function JourneyCamera({ motion = 1 }: JourneyCameraProps) {
     CAMERA_CURVE.getPointAt(progress, position.current);
     CAMERA_CURVE.getTangentAt(progress, tangent.current);
 
-    // Frame-rate independent smoothing — same feel at 60fps and 144fps.
-    const ease = 1 - Math.pow(0.0015, delta);
+    // Frame-rate independent smoothing — gentle, slow lerp.
+    const ease = 1 - Math.pow(0.04, delta);
 
     const targetPointerX = journeyState.pointerActive ? journeyState.pointerX : 0;
     const targetPointerY = journeyState.pointerActive ? journeyState.pointerY : 0;
@@ -49,26 +49,26 @@ export function JourneyCamera({ motion = 1 }: JourneyCameraProps) {
     pointer.current.y += (targetPointerY - pointer.current.y) * ease;
 
     const time = clock.getElapsedTime();
-    // Idle breathing so the corridor stays alive when scrolling stops.
-    const driftY = Math.sin(time * 0.24) * 0.12 * motion;
-    const driftX = Math.cos(time * 0.19) * 0.1 * motion;
+    // Gentle idle breathing so the corridor stays alive smoothly when scrolling stops.
+    const driftY = Math.sin(time * 0.1) * 0.04 * motion;
+    const driftX = Math.cos(time * 0.08) * 0.03 * motion;
 
     camera.position.set(
-      position.current.x + pointer.current.x * 0.9 * motion + driftX,
-      position.current.y + pointer.current.y * 0.6 * motion + driftY,
+      position.current.x + pointer.current.x * 0.3 * motion + driftX,
+      position.current.y + pointer.current.y * 0.2 * motion + driftY,
       position.current.z
     );
 
-    // Aim down the corridor, nudged by the pointer so looking around feels live.
+    // Aim down the corridor with subtle pointer response.
     lookTarget.current
       .copy(position.current)
       .addScaledVector(tangent.current, LOOK_AHEAD);
-    lookTarget.current.x += pointer.current.x * 1.6 * motion;
-    lookTarget.current.y += pointer.current.y * 1.1 * motion;
+    lookTarget.current.x += pointer.current.x * 0.4 * motion;
+    lookTarget.current.y += pointer.current.y * 0.3 * motion;
     camera.lookAt(lookTarget.current);
 
-    // Banking: fast scrolling rolls the frame a touch, like a camera on a rig.
-    const targetRoll = THREE.MathUtils.clamp(journeyState.velocity / 9000, -1, 1) * 0.035 * motion;
+    // Banking: smooth, subtle roll on scroll velocity.
+    const targetRoll = THREE.MathUtils.clamp(journeyState.velocity / 30000, -1, 1) * 0.008 * motion;
     roll.current += (targetRoll - roll.current) * ease;
     camera.rotation.z += roll.current;
   });

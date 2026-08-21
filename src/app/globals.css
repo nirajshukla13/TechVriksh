@@ -313,29 +313,8 @@ body {
 }
 
 /* ─── Custom cursor ─── */
-.custom-cursor {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(57, 217, 138, 0.8);
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-}
-
-.custom-cursor.hover {
-  width: 32px;
-  height: 32px;
-  background: rgba(57, 217, 138, 0.2);
-  border: 1px solid rgba(57, 217, 138, 0.6);
-}
-
-@media (max-width: 1024px) {
-  .custom-cursor {
-    display: none;
-  }
+@media (max-width: 1023px) {
+  /* Cursor hidden on mobile & touch devices */
 }
 
 /* ─── Leaflet map customization ─── */

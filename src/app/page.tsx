@@ -15,7 +15,6 @@ export default function HomePage() {
   const featuredEvents = featuredEventSlugs
     .map((slug) => events.find((event) => event.slug === slug))
     .filter((event): event is NonNullable<typeof event> => Boolean(event));
-
   // Calculate stats
   const totalMembers = stateMembers.reduce((sum, entry) => sum + entry.count, 0);
   const totalStates = stateMembers.length;

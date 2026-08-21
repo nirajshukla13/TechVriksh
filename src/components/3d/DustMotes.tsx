@@ -56,16 +56,15 @@ export function DustMotes({ count }: DustMotesProps) {
 
     const time = clock.getElapsedTime();
 
-    // Drift the whole field rather than each point: one transform instead of
-    // thousands of buffer writes per frame.
-    points.position.y = Math.sin(time * 0.08) * 0.5;
-    points.position.x = Math.cos(time * 0.06) * 0.4;
-    points.rotation.z = time * 0.004;
+    // Gentle drift for atmospheric particles.
+    points.position.y = Math.sin(time * 0.03) * 0.2;
+    points.position.x = Math.cos(time * 0.02) * 0.15;
+    points.rotation.z = time * 0.001;
 
-    // Motes brighten and swell slightly while scrolling hard.
-    const rush = THREE.MathUtils.clamp(Math.abs(journeyState.velocity) / 12000, 0, 1);
-    material.opacity = 0.3 + rush * 0.35;
-    material.size = 0.07 + rush * 0.05;
+    // Smooth subtle brightening during flight.
+    const rush = THREE.MathUtils.clamp(Math.abs(journeyState.velocity) / 25000, 0, 1);
+    material.opacity = 0.25 + rush * 0.2;
+    material.size = 0.06 + rush * 0.03;
   });
 
   return (

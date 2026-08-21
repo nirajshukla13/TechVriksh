@@ -5,6 +5,8 @@ import { ScrollScene } from '@/components/3d/ScrollScene';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { CustomCursor } from '@/components/ui/CustomCursor';
 import { Footer } from '@/components/ui/Footer';
+import { techVrikshLogoUrl } from '@/app/data';
+import { BrandLoader } from '@/components/ui/BrandLoader';
 import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,7 +26,12 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: 'Tech Vriksh — Real. Relevant. Rooted.',
-  description: 'A student-driven technology community connecting people, ideas and opportunities across India.'
+  description: 'A student-driven technology community connecting people, ideas and opportunities across India.',
+  icons: {
+    icon: techVrikshLogoUrl,
+    shortcut: techVrikshLogoUrl,
+    apple: techVrikshLogoUrl,
+  }
 };
 
 export default function RootLayout({
@@ -34,10 +41,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preload" href="/tech-vriksh-logo.webp" as="image" type="image/webp" fetchPriority="high" />
+      </head>
       <body className={`${spaceGrotesk.variable} ${inter.variable} ${jetBrainsMono.variable} tv-shell`}>
+        <BrandLoader />
         <LenisProvider>
           <ScrollScene />
-          <CustomCursor />
           <SiteHeader />
           <div className="tv-content-layer">{children}</div>
           <Footer />

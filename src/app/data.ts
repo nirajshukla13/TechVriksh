@@ -142,7 +142,7 @@ export const speakers: Speaker[] = [
 
 const driveImage = (fileId: string) => `https://drive.google.com/uc?export=view&id=${fileId}`;
 
-export const techVrikshLogoUrl = driveImage('1KqtKhx-YZYuSgGKITtBPJzEg6MbD73_j');
+export const techVrikshLogoUrl = '/tech-vriksh-logo.webp';
 
 export const communityJoinUrl = 'https://forms.gle/CCyMWwfZBeB7QFw';
 

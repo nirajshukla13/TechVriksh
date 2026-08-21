@@ -48,9 +48,9 @@ export function LightGates({ withBloom = true }: LightGatesProps) {
     const time = clock.getElapsedTime();
 
     group.children.forEach((child, index) => {
-      // Each frame breathes on its own phase so they never pulse in lockstep.
+      // Each frame breathes gently on its own phase.
       const phase = index * 1.7;
-      const pulse = 0.55 + Math.sin(time * 0.5 + phase) * 0.16;
+      const pulse = 0.45 + Math.sin(time * 0.2 + phase) * 0.1;
 
       const lines = child.children[0] as THREE.LineSegments | undefined;
       if (lines) {
@@ -58,13 +58,11 @@ export function LightGates({ withBloom = true }: LightGatesProps) {
         material.opacity = pulse;
       }
 
-      // Frames drift very slightly, keeping the corridor from feeling static.
-      child.position.x = STATIONS[index].position[0] + Math.sin(time * 0.16 + phase) * 0.18;
-      child.position.y = STATIONS[index].position[1] + Math.cos(time * 0.13 + phase) * 0.14;
+      // Frames drift very slowly.
+      child.position.x = STATIONS[index].position[0] + Math.sin(time * 0.06 + phase) * 0.06;
+      child.position.y = STATIONS[index].position[1] + Math.cos(time * 0.05 + phase) * 0.05;
 
-      // Scrolling fast very slightly stretches the frames along the flight
-      // axis — a cheap motion-blur read without a post-processing pass.
-      const stretch = 1 + THREE.MathUtils.clamp(Math.abs(journeyState.velocity) / 24000, 0, 0.5);
+      const stretch = 1 + THREE.MathUtils.clamp(Math.abs(journeyState.velocity) / 45000, 0, 0.2);
       child.scale.z = stretch;
     });
   });
@@ -77,7 +75,7 @@ export function LightGates({ withBloom = true }: LightGatesProps) {
             <lineBasicMaterial
               color={color}
               transparent
-              opacity={0.55}
+              opacity={0.25}
               blending={THREE.AdditiveBlending}
               depthWrite={false}
               toneMapped={false}
@@ -91,7 +89,7 @@ export function LightGates({ withBloom = true }: LightGatesProps) {
                 map={bloomTexture}
                 color={color}
                 transparent
-                opacity={0.1}
+                opacity={0.025}
                 blending={THREE.AdditiveBlending}
                 depthWrite={false}
                 toneMapped={false}
