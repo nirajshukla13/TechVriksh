@@ -25,7 +25,7 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Tech Vriksh — Real. Relevant. Rooted.',
+  title: 'Tech Vriksh',
   description: 'A student-driven technology community connecting people, ideas and opportunities across India.',
   icons: {
     icon: techVrikshLogoUrl,

@@ -132,61 +132,75 @@ export default function JoinPage() {
         {/* Right Side: Quick Links & How Joining Works */}
         <div className="flex flex-col gap-6">
           {/* Quick Links Card */}
-          <div className="rounded-[2.2rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.75)] to-[rgba(11,23,20,0.9)] p-7 sm:p-8 shadow-[var(--tv-shadow-md)]">
-            <div className="tv-mono text-xs uppercase tracking-[0.34em] text-[color:var(--tv-cyan)] font-semibold mb-4">
+          <div className="rounded-[2.2rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.75)] to-[rgba(11,23,20,0.9)] p-6 sm:p-8 shadow-[var(--tv-shadow-md)]">
+            <div className="tv-mono text-xs uppercase tracking-[0.34em] text-[color:var(--tv-cyan)] font-semibold mb-5">
               Quick Connect
             </div>
             
-            <div className="grid gap-3.5 grid-cols-1 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {/* Join Form Card */}
               <a
                 href={communityJoinUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group/link flex flex-col justify-between rounded-2xl border border-[color:var(--tv-primary)]/30 bg-[color:var(--tv-primary)]/10 p-4.5 transition-all duration-300 hover:border-[color:var(--tv-primary)] hover:bg-[color:var(--tv-primary)]/20 hover:-translate-y-1"
+                className="group/link flex flex-col justify-between rounded-2xl border border-[color:var(--tv-primary)]/30 bg-[color:var(--tv-primary)]/10 p-5 transition-all duration-300 hover:border-[color:var(--tv-primary)] hover:bg-[color:var(--tv-primary)]/20 hover:-translate-y-1"
               >
-                <div>
-                  <div className="tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-primary)]">Join Form</div>
-                  <div className="mt-1 text-xs text-[color:var(--tv-text-secondary)]">Google Form sign-up</div>
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--tv-primary)]/20 text-[color:var(--tv-primary)] border border-[color:var(--tv-primary)]/30">
+                    <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+                      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-primary)]">Join Form</h3>
+                    <p className="mt-1 text-xs text-[color:var(--tv-text-secondary)] leading-relaxed">Google Form sign-up</p>
+                  </div>
                 </div>
-                <div className="mt-4 tv-mono text-xs text-[color:var(--tv-primary)] font-semibold flex items-center justify-between">
+                <div className="mt-5 pt-3 border-t border-white/10 tv-mono text-xs text-[color:var(--tv-primary)] font-semibold flex items-center justify-between">
                   <span>Apply</span>
                   <span>↗</span>
                 </div>
               </a>
 
+              {/* Instagram Card */}
               <a
                 href={communityInstagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group/link flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4.5 transition-all duration-300 hover:border-[color:var(--tv-cyan)]/50 hover:bg-white/[0.08] hover:-translate-y-1"
+                className="group/link flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 hover:border-[color:var(--tv-cyan)]/50 hover:bg-white/[0.08] hover:-translate-y-1"
               >
-                <div>
-                  <div className="flex items-center gap-2 tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-cyan)]">
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--tv-cyan)]/15 text-[color:var(--tv-cyan)] border border-[color:var(--tv-cyan)]/30">
                     {instagramIcon}
-                    <span>Insta</span>
                   </div>
-                  <div className="mt-1 text-xs text-[color:var(--tv-text-secondary)]">Reels &amp; updates</div>
+                  <div>
+                    <h3 className="tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-cyan)]">Instagram</h3>
+                    <p className="mt-1 text-xs text-[color:var(--tv-text-secondary)] leading-relaxed">Reels &amp; updates</p>
+                  </div>
                 </div>
-                <div className="mt-4 tv-mono text-xs text-[color:var(--tv-cyan)] font-semibold flex items-center justify-between">
+                <div className="mt-5 pt-3 border-t border-white/10 tv-mono text-xs text-[color:var(--tv-cyan)] font-semibold flex items-center justify-between">
                   <span>Follow</span>
                   <span>↗</span>
                 </div>
               </a>
 
+              {/* LinkedIn Card */}
               <a
                 href={communityLinkedInUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="group/link flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-4.5 transition-all duration-300 hover:border-[color:var(--tv-cyan)]/50 hover:bg-white/[0.08] hover:-translate-y-1"
+                className="group/link flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 hover:border-[color:var(--tv-cyan)]/50 hover:bg-white/[0.08] hover:-translate-y-1"
               >
-                <div>
-                  <div className="flex items-center gap-2 tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-cyan)]">
+                <div className="space-y-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--tv-cyan)]/15 text-[color:var(--tv-cyan)] border border-[color:var(--tv-cyan)]/30">
                     {linkedInIcon}
-                    <span>LinkedIn</span>
                   </div>
-                  <div className="mt-1 text-xs text-[color:var(--tv-text-secondary)]">Company page</div>
+                  <div>
+                    <h3 className="tv-heading text-lg font-bold text-white group-hover/link:text-[color:var(--tv-cyan)]">LinkedIn</h3>
+                    <p className="mt-1 text-xs text-[color:var(--tv-text-secondary)] leading-relaxed">Company page</p>
+                  </div>
                 </div>
-                <div className="mt-4 tv-mono text-xs text-[color:var(--tv-cyan)] font-semibold flex items-center justify-between">
+                <div className="mt-5 pt-3 border-t border-white/10 tv-mono text-xs text-[color:var(--tv-cyan)] font-semibold flex items-center justify-between">
                   <span>Connect</span>
                   <span>↗</span>
                 </div>
