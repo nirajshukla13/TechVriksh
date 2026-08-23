@@ -12,9 +12,9 @@ interface PosterImageProps {
    */
   align?: 'center' | 'right';
   /**
-   * `contain` (default) shows the whole image over a wash of itself — right for
-   * designed artwork. `cover` is the plain crop-to-fill, for images already
-   * drawn to the box's shape; it skips the wash entirely.
+   * Defaults from `isPoster(src)`: real posters are contained, the landscape
+   * `/sample/*.svg` placeholders are covered. Pass it explicitly only to
+   * override that — a photograph stored as a `.jpg` that wants cropping, say.
    */
   fit?: 'contain' | 'cover';
 }
@@ -52,9 +52,13 @@ export function PosterImage({
   sizes,
   priority = false,
   align = 'center',
-  fit = 'contain',
+  fit,
 }: PosterImageProps) {
-  if (fit === 'cover') {
+  // Derived rather than defaulted to `'contain'`, so dropping a landscape
+  // placeholder into any of these boxes cannot silently letterbox it.
+  const mode = fit ?? (isPoster(src) ? 'contain' : 'cover');
+
+  if (mode === 'cover') {
     return (
       <Image
         src={src}

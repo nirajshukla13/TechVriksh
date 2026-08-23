@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { hackathons } from '@/app/data';
-import { PosterImage, isPoster } from '@/components/ui/PosterImage';
+import { PosterImage } from '@/components/ui/PosterImage';
 
 export default function HackathonsPage() {
   return (
@@ -36,7 +36,6 @@ export default function HackathonsPage() {
                 alt={`${hackathon.title} poster`}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 align="right"
-                fit={isPoster(hackathon.coverImage) ? 'contain' : 'cover'}
               />
               {/* Scrim, kept short. The badge below carries its own `bg-black/70`
                   and sits on the blurred wash to the left of the right-anchored

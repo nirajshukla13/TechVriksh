@@ -27,16 +27,12 @@ const filters: { key: FilterKey; label: string }[] = [
   { key: 'hackathon', label: 'Hackathons' },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-function extractYear(dateLabel: string): string {
-  const match = dateLabel.match(/\d{4}/);
-  return match ? match[0] : 'Past';
-}
-
 // ─── Single event card ────────────────────────────────────────────────────────
 function EventCard({ event, index }: { event: EventItem; index: number }) {
   const km = kindMeta[event.kind];
-  const fm = formatMeta[event.format];
+  // Absent on events whose record does not state a format — no pill rather than
+  // a guessed one.
+  const fm = event.format ? formatMeta[event.format] : null;
   const isUpcoming = event.status === 'upcoming';
 
   return (
@@ -66,9 +62,11 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
           >
             {km.label}
           </span>
-          <span className="tv-mono rounded-full border border-white/10 bg-black/60 px-2.5 py-1 text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--tv-text-muted)] backdrop-blur-sm">
-            {fm.label}
-          </span>
+          {fm && (
+            <span className="tv-mono rounded-full border border-white/10 bg-black/60 px-2.5 py-1 text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--tv-text-muted)] backdrop-blur-sm">
+              {fm.label}
+            </span>
+          )}
         </div>
 
         {/* Status indicator */}
@@ -150,18 +148,6 @@ export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventIt
     return nonFeaturedEvents;
   }, [activeFilter, nonFeaturedEvents]);
 
-  // Group by year
-  const grouped = useMemo(() => {
-    const map = new Map<string, EventItem[]>();
-    for (const event of filtered) {
-      const year = extractYear(event.dateLabel);
-      if (!map.has(year)) map.set(year, []);
-      map.get(year)!.push(event);
-    }
-    // Sort years descending
-    return Array.from(map.entries()).sort(([a], [b]) => Number(b) - Number(a));
-  }, [filtered]);
-
   return (
     <div className="space-y-10">
       {/* ── Filter tabs ── */}
@@ -188,34 +174,22 @@ export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventIt
         </span>
       </div>
 
-      {/* ── Year-grouped event grid ── */}
-      {grouped.length === 0 ? (
+      {/* ── Event grid ── */}
+      {/* One flat list. Events are not split by year or by status: an undated
+          entry would otherwise need a heading of its own, which singles it out
+          instead of letting it sit among the rest. The filter tabs are the only
+          way the list is ever divided — picking "Hackathons" narrows it to the
+          hackathon entries. */}
+      {filtered.length === 0 ? (
         <div className="rounded-2xl border border-[color:var(--tv-border)] bg-white/[0.02] p-10 text-center">
           <p className="tv-mono text-sm text-[color:var(--tv-text-muted)]">No events match this filter.</p>
         </div>
       ) : (
-        <div className="space-y-12">
-          {grouped.map(([year, yearEvents]) => (
-            <div key={year}>
-              {/* Year header */}
-              <div className="mb-6 flex items-center gap-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-[color:var(--tv-border)] to-transparent" />
-                <span className="tv-mono text-xs uppercase tracking-[0.3em] text-[color:var(--tv-text-tertiary)] px-1">
-                  {year}
-                </span>
-                <div className="h-px flex-1 bg-gradient-to-l from-[color:var(--tv-border)] to-transparent" />
-              </div>
-
-              {/* Grid */}
-              {/* Portrait poster tiles are taller than the old 220px crop, so the
-                  grid gains a fourth column at xl — narrower tiles, shorter rows,
-                  and 12 events fall into 3 rows instead of 4. */}
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {yearEvents.map((event, i) => (
-                  <EventCard key={event.slug} event={event} index={i} />
-                ))}
-              </div>
-            </div>
+        // Portrait poster tiles are taller than the old 220px crop, so the grid
+        // gains a fourth column at xl — narrower tiles, shorter rows.
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((event, i) => (
+            <EventCard key={event.slug} event={event} index={i} />
           ))}
         </div>
       )}

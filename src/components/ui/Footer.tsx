@@ -36,11 +36,8 @@ export function Footer() {
                   Events
                 </Link>
               </li>
-              <li>
-                <Link href="/hackathons" className="text-sm text-[color:var(--tv-text-secondary)] transition-colors hover:text-[color:var(--tv-primary)]">
-                  Hackathons
-                </Link>
-              </li>
+              {/* Hackathons removed alongside the header nav entry — restoring it
+                  there should restore it here too. */}
               <li>
                 <Link href="/join" className="text-sm text-[color:var(--tv-text-secondary)] transition-colors hover:text-[color:var(--tv-primary)]">
                   Community

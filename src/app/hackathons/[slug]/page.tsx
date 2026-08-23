@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { hackathons, communityJoinUrl } from '../../data';
-import { PosterImage, isPoster } from '@/components/ui/PosterImage';
+import { PosterImage } from '@/components/ui/PosterImage';
 
 // Track accent colours cycling through the TV palette
 const TRACK_ACCENTS = [
@@ -43,7 +43,6 @@ export default async function HackathonDetailPage({
             alt={`${hackathon.title} poster`}
             sizes="100vw"
             align="right"
-            fit={isPoster(hackathon.coverImage) ? 'contain' : 'cover'}
             priority
           />
           {/* Gradients. The first still backs the title on the left. The second

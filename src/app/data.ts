@@ -7,7 +7,12 @@ export type EventItem = {
   title: string;
   subtitle: string;
   kind: EventKind;
-  format: EventFormat;
+  /**
+   * Omitted where the record genuinely does not state it. The card then shows no
+   * online/offline pill, and the online/offline filters skip the entry, rather
+   * than either of them asserting a format nobody has confirmed.
+   */
+  format?: EventFormat;
   status: EventStatus;
   dateLabel: string;
   description: string;
@@ -192,6 +197,23 @@ export const events: EventItem[] = [
     image: driveImage('1bPAl9b3kwUyu7Modb3umroMP3Goxt5-4'),
     registrationUrl: 'https://lu.ma/tech-vriksh-hackvriksh',
     notes: ['Flagship hackathon', 'Official poster supplied by the team']
+  },
+  // Mirrors the `pre-hackathon-series` entry in `hackathons` below, so the
+  // Events page still lists it now that Hackathons is off the nav. Every field
+  // is copied or summarised from that entry — `format` is omitted and the date
+  // reads as unannounced because that record states neither.
+  {
+    slug: 'pre-hackathon-series',
+    title: 'Pre Hackathon Series',
+    subtitle: 'Hackathon Prep',
+    kind: 'hackathon',
+    status: 'upcoming',
+    dateLabel: 'Dates to be announced',
+    description:
+      'Warm-up sessions before HackVriksh: forming balanced teams and defining roles, then shaping a practical problem statement into a buildable project.',
+    image: '/sample/hackathon-02.svg',
+    registrationUrl: 'https://lu.ma/tech-vriksh-pre-hackathon-series',
+    notes: ['Session 1: Team setup', 'Session 2: Idea framing']
   },
   {
     slug: 'techpath-2o-discover-decide-dominate',

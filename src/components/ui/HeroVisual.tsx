@@ -74,7 +74,9 @@ function buildHeroPhoto(source: (typeof PHOTO_SOURCES)[number]): HeroEventPhoto 
       : `Photograph from the Tech Vriksh ${event.title} event`,
     src,
     eventTitle: name.toUpperCase(),
-    eventCategory: `${event.format} · ${event.kind}`.toUpperCase(),
+    // `format` is optional on EventItem, so the separator is only added when
+    // there is actually a format to put in front of it.
+    eventCategory: [event.format, event.kind].filter(Boolean).join(' · ').toUpperCase(),
     eventTheme: (tagline ?? event.subtitle).toUpperCase(),
     date: event.dateLabel,
     location: event.venue ?? '',
