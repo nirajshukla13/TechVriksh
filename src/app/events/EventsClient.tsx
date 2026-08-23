@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import Image from 'next/image';
+import { PosterImage } from '@/components/ui/PosterImage';
 import type { EventItem, EventKind, EventFormat } from '@/app/data';
 
 // ─── Kind metadata ────────────────────────────────────────────────────────────
@@ -44,17 +44,20 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.72)] to-[rgba(11,23,20,0.88)] shadow-[var(--tv-shadow-md)] transition-all duration-300 hover:border-[color:var(--tv-border-strong)] hover:shadow-[var(--tv-shadow-depth)] hover:-translate-y-0.5"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      {/* Image */}
-      <div className="relative w-full overflow-hidden" style={{ height: '220px' }}>
-        <Image
+      {/* Poster. A fixed 220px-tall box against a ~392px-wide card is a 1.78
+          landscape frame; these covers run 0.62–0.86 portrait, so cropping to
+          fill it showed barely a third of each poster. Portrait box, contained
+          artwork — the whole poster, every time. */}
+      <div className="relative w-full overflow-hidden aspect-[4/5]">
+        <PosterImage
           src={event.image}
-          alt={event.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+          alt={`${event.title} event poster`}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 300px"
         />
-        {/* Bottom gradient overlay on image */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#040907]/90 to-transparent" />
+        {/* Scrim for the pills only. This was `h-1/2`, which was fine over a
+            cropped photo but darkens the lower half of a whole poster — where the
+            date and venue are printed. Just tall enough to seat the pills. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#040907]/90 to-transparent" />
 
         {/* Kind pill — overlaid bottom-left of image */}
         <div className="absolute bottom-3 left-3 flex items-center gap-2">
@@ -204,7 +207,10 @@ export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventIt
               </div>
 
               {/* Grid */}
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {/* Portrait poster tiles are taller than the old 220px crop, so the
+                  grid gains a fourth column at xl — narrower tiles, shorter rows,
+                  and 12 events fall into 3 rows instead of 4. */}
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {yearEvents.map((event, i) => (
                   <EventCard key={event.slug} event={event} index={i} />
                 ))}

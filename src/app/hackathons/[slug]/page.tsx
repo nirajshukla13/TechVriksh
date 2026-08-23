@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { hackathons, communityJoinUrl } from '../../data';
+import { PosterImage, isPoster } from '@/components/ui/PosterImage';
 
 // Track accent colours cycling through the TV palette
 const TRACK_ACCENTS = [
@@ -34,19 +34,25 @@ export default async function HackathonDetailPage({
 
       {/* ═══ HERO CARD ═══ */}
       <section className="relative mb-10 overflow-hidden rounded-[2rem] border border-[color:var(--tv-border)] shadow-[var(--tv-shadow-depth)]">
-        {/* Cover image */}
+        {/* Cover poster — contained and anchored right; the title block overlaid
+            on the left keeps the existing left-to-right gradient behind it. A
+            centre crop of this portrait poster showed only 26% of it. */}
         <div className="relative w-full overflow-hidden" style={{ height: '440px' }}>
-          <Image
+          <PosterImage
             src={hackathon.coverImage}
-            alt={hackathon.title}
-            fill
+            alt={`${hackathon.title} poster`}
             sizes="100vw"
-            className="object-cover object-center"
+            align="right"
+            fit={isPoster(hackathon.coverImage) ? 'contain' : 'cover'}
             priority
           />
-          {/* Gradients */}
+          {/* Gradients. The first still backs the title on the left. The second
+              was `h-4/5 from-98%` across the full width — over a cropped photo
+              that was free, but it would now black out the bottom two-thirds of
+              the poster. Diagonal instead: near-solid under the title in the
+              bottom-left corner, clear by the time it reaches the artwork. */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#040907]/90 via-[#040907]/50 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-4/5 bg-gradient-to-t from-[#040907]/98 to-transparent" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-[#040907] via-[#040907]/40 to-transparent" />
 
           {/* Content over image */}
           <div className="absolute inset-0 flex flex-col justify-end p-7 sm:p-10">

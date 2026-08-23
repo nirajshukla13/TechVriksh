@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useEffect, type ReactNode } from 'react';
 import Image from 'next/image';
+import { PosterImage } from './PosterImage';
 
 interface PremiumCardProps {
   children: ReactNode;
@@ -111,19 +112,37 @@ interface CardImageProps {
   alt: string;
   aspect?: string;
   badges?: ReactNode;
+  /**
+   * `cover` crops the image to fill the box — right for photographs. `poster`
+   * shows the whole image over a blurred wash of itself — right for designed
+   * artwork, where a crop would cut off the title and date.
+   */
+  fit?: 'cover' | 'poster';
+  sizes?: string;
 }
 
-export function CardImage({ src, alt, aspect = '16/9', badges }: CardImageProps) {
+export function CardImage({
+  src,
+  alt,
+  aspect = '16/9',
+  badges,
+  fit = 'cover',
+  sizes = '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw',
+}: CardImageProps) {
   return (
     <div className="relative overflow-hidden border-b border-white/[0.05]">
-      <div className="overflow-hidden" style={{ aspectRatio: aspect }}>
-        <Image
-          src={src}
-          alt={alt}
-          width={1200}
-          height={800}
-          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-        />
+      <div className="relative overflow-hidden" style={{ aspectRatio: aspect }}>
+        {fit === 'poster' ? (
+          <PosterImage src={src} alt={alt} sizes={sizes} />
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            width={1200}
+            height={800}
+            className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+          />
+        )}
       </div>
       {badges && (
         <div className="absolute left-3.5 top-3.5 z-[4] flex flex-wrap gap-1.5">

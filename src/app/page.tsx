@@ -212,10 +212,15 @@ export default function HomePage() {
             {featuredEvents.map((event, index) => (
               <Reveal key={event.slug} delay={index * 100}>
                 <PremiumCard>
+                  {/* Event covers are portrait posters (0.62–1.00), so the box is
+                      portrait too and the artwork is contained, not cropped. A
+                      4/3 crop was discarding 25–47% of every one of them. */}
                   <CardImage
                     src={event.image}
-                    alt={event.title}
-                    aspect="4/3"
+                    alt={`${event.title} event poster`}
+                    aspect="4/5"
+                    fit="poster"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 360px"
                     badges={
                       <>
                         <CardBadge accent="primary">{event.subtitle}</CardBadge>

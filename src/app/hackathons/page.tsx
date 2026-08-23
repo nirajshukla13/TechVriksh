@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { hackathons } from '@/app/data';
+import { PosterImage, isPoster } from '@/components/ui/PosterImage';
 
 export default function HackathonsPage() {
   return (
@@ -26,16 +26,24 @@ export default function HackathonsPage() {
             key={hackathon.slug}
             className="group flex flex-col overflow-hidden rounded-2xl border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.72)] to-[rgba(11,23,20,0.88)] shadow-[var(--tv-shadow-md)] transition-all duration-300 hover:border-[color:var(--tv-border-strong)] hover:shadow-[var(--tv-shadow-depth)] hover:-translate-y-0.5"
           >
-            {/* Cover image — Next.js Image for Google Drive & SVG support */}
+            {/* Cover poster — contained and anchored right, so the whole artwork
+                shows and the badge on the left sits on the colour wash rather
+                than on top of it. Cropping this 0.707 poster to a 2.13 banner
+                left only a third of it visible. */}
             <div className="relative w-full overflow-hidden" style={{ height: '280px' }}>
-              <Image
+              <PosterImage
                 src={hackathon.coverImage}
-                alt={hackathon.title}
-                fill
+                alt={`${hackathon.title} poster`}
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                align="right"
+                fit={isPoster(hackathon.coverImage) ? 'contain' : 'cover'}
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#040907]/90 to-transparent" />
+              {/* Scrim, kept short. The badge below carries its own `bg-black/70`
+                  and sits on the blurred wash to the left of the right-anchored
+                  poster, so it needs far less help than when this was a photo
+                  crop — and `h-1/2` would have dimmed the poster's bottom third,
+                  where the date sits. */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#040907]/75 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <span className="tv-mono rounded-full border border-[color:var(--tv-primary)]/30 bg-black/70 px-3 py-1 text-[0.62rem] uppercase tracking-[0.2em] text-[color:var(--tv-primary)] backdrop-blur-sm font-semibold">
                   {hackathon.heroMetric}
