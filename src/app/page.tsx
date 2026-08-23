@@ -19,14 +19,16 @@ export default function HomePage() {
   const totalMembers = stateMembers.reduce((sum, entry) => sum + entry.count, 0);
   const totalStates = stateMembers.length;
   const totalEvents = events.length;
+  // Derived, not hardcoded, so the recap can't drift from the events list.
+  const sessions2025 = events.filter((event) => event.dateLabel.endsWith('2025')).length;
 
   return (
     <main className="relative">
       {/* ═══════════════════════════════════════════
           01 — HERO
       ═══════════════════════════════════════════ */}
-      <section data-station="hero" className="mx-auto min-h-screen flex items-center w-full max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <div className="grid w-full gap-12 lg:grid-cols-2 lg:items-center">
+      <section data-station="hero" className="mx-auto min-h-[calc(100svh-4.5rem)] flex items-center w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
+        <div className="grid w-full gap-10 lg:grid-cols-2 lg:items-center lg:gap-12">
           <div className="tv-hero-in space-y-8">
             <div className="space-y-4">
               <div className="tv-mono text-xs uppercase tracking-[0.36em] text-[color:var(--tv-primary)]">
@@ -68,7 +70,7 @@ export default function HomePage() {
           </div>
 
           {/* Hero real event visual */}
-          <div className="relative block w-full mt-6 lg:mt-0">
+          <div className="relative block w-full">
             <div className="w-full">
               <HeroVisual />
             </div>
@@ -81,46 +83,42 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           02 — COMMUNITY STATS
       ═══════════════════════════════════════════ */}
-      <section data-station="community" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="community" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop">
-            <div className="mb-12 max-w-2xl">
-              <div className="tv-section-label">Community</div>
-              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-                People.<br />
-                Ideas.<br />
-                Opportunities.
-              </h2>
-            </div>
+            {/* Headline sits *beside* the figures rather than above them. Stacked,
+                the three heading lines plus three full-size stats cost ~420px of
+                height on desktop and ~500px on mobile (where the stats also went
+                one-per-row) — for one headline and three numbers. */}
+            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
+              <div>
+                <div className="tv-section-label">Community</div>
+                <h2 className="tv-heading mt-3 text-3xl leading-[1.05] tracking-[-0.05em] sm:text-4xl lg:text-[2.75rem]">
+                  People.<br />
+                  Ideas.<br />
+                  Opportunities.
+                </h2>
+              </div>
 
-            <div className="grid gap-8 sm:grid-cols-3">
-            <div className="group">
-              <div className="tv-heading text-6xl tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:tv-glow sm:text-7xl">
-                <Counter target={totalMembers} suffix="+" />
-              </div>
-              <div className="tv-mono mt-3 text-sm uppercase tracking-[0.28em] text-[color:var(--tv-text-secondary)]">
-                Members
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="tv-heading text-6xl tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:tv-glow sm:text-7xl">
-                <Counter target={totalStates} />
-              </div>
-              <div className="tv-mono mt-3 text-sm uppercase tracking-[0.28em] text-[color:var(--tv-text-secondary)]">
-                States
-              </div>
-            </div>
-
-            <div className="group">
-              <div className="tv-heading text-6xl tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:tv-glow sm:text-7xl">
-                <Counter target={totalEvents} suffix="+" />
-              </div>
-              <div className="tv-mono mt-3 text-sm uppercase tracking-[0.28em] text-[color:var(--tv-text-secondary)]">
-                Events
+              {/* One card, three cells split by hairlines — stays 3-across at every
+                  width, so it never reflows into a tall stack on mobile. */}
+              <div className="tv-card grid grid-cols-3 divide-x divide-[color:var(--tv-border)]">
+                {[
+                  { label: 'Members', target: totalMembers, suffix: '+' },
+                  { label: 'States', target: totalStates, suffix: '' },
+                  { label: 'Events', target: totalEvents, suffix: '+' }
+                ].map((stat) => (
+                  <div key={stat.label} className="group px-2 py-6 text-center sm:px-4 sm:py-7">
+                    <div className="tv-heading text-[1.75rem] leading-none tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:[text-shadow:0_0_18px_rgba(57,217,138,0.32)] sm:text-4xl lg:text-[2.75rem]">
+                      <Counter target={stat.target} suffix={stat.suffix} />
+                    </div>
+                    <div className="tv-mono mt-2.5 text-[0.65rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-secondary)] sm:text-xs sm:tracking-[0.24em]">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
           </div>
         </Reveal>
       </section>
@@ -137,7 +135,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           03 — RECENT HIGHLIGHTS
       ═══════════════════════════════════════════ */}
-      <section data-station="highlights" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="highlights" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop mb-8">
             <div className="tv-section-label"></div>
@@ -191,7 +189,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           04 — FEATURED EVENTS
       ═══════════════════════════════════════════ */}
-      <section data-station="events" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="events" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop">
             <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
@@ -276,25 +274,36 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           07 — 2025 RECAP
       ═══════════════════════════════════════════ */}
-      <section data-station="recap" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="recap" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop">
-            <div className="mb-8 max-w-2xl">
-              <div className="tv-section-label">Recap</div>
-              <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-                2025 RECAP
-              </h2>
-              <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
-                A year of Tech Vriksh, in one video.
-              </p>
-            </div>
+            {/* The embed is a 16:9 box that fills whatever width it is given, so
+                stacking it under a full-width header made this the tallest block
+                on the page: 612px of video before the heading and padding were
+                counted. Beside the copy instead, the video sets the section's
+                height rather than adding to it. */}
+            <div className="grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-center md:gap-10 lg:gap-14">
+              <div>
+                <div className="tv-section-label">Recap</div>
+                <h2 className="tv-heading mt-3 text-3xl leading-[1.05] tracking-[-0.05em] sm:text-4xl lg:text-[2.75rem]">
+                  2025 RECAP
+                </h2>
+                <p className="mt-4 max-w-sm text-base leading-7 text-[color:var(--tv-text-secondary)]">
+                  A year of Tech Vriksh, in one video.
+                </p>
+                <div className="tv-mono mt-5 flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.24em] text-[color:var(--tv-text-muted)] lg:mt-6">
+                  <span className="h-px w-8 bg-[color:var(--tv-border-strong)]" />
+                  {sessions2025} sessions
+                </div>
+              </div>
 
-          <div className="group relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.04] to-transparent p-4 shadow-[0_24px_64px_rgba(0,0,0,0.4)] transition-shadow duration-500 hover:shadow-[0_32px_80px_rgba(0,0,0,0.5)]">
-            <DriveVideoEmbed
-              url="https://drive.google.com/file/d/1JWtB2j04oCn8ErjhcTMcHRrq2mwOA6-A/view?usp=drive_link"
-              title="Tech Vriksh 2025 year-in-review video"
-            />
-          </div>
+              <div className="group relative overflow-hidden rounded-[1.9rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.04] to-transparent p-2 shadow-[0_24px_64px_rgba(0,0,0,0.4)] transition-shadow duration-500 hover:shadow-[0_32px_80px_rgba(0,0,0,0.5)]">
+                <DriveVideoEmbed
+                  url="https://drive.google.com/file/d/1JWtB2j04oCn8ErjhcTMcHRrq2mwOA6-A/view?usp=drive_link"
+                  title="Tech Vriksh 2025 year-in-review video"
+                />
+              </div>
+            </div>
           </div>
         </Reveal>
       </section>
@@ -304,7 +313,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           08 — BRAND + COMMUNITY JOURNEY (two-column)
       ═══════════════════════════════════════════ */}
-      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
 
           {/* ── LEFT COLUMN — Tech Vriksh brand / community context ── */}
@@ -340,7 +349,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           09 — INDIA COMMUNITY MAP
       ═══════════════════════════════════════════ */}
-      <section data-station="india" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section data-station="india" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop">
             <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
@@ -368,7 +377,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           10 — FINAL CTA
       ═══════════════════════════════════════════ */}
-      <section data-station="cta" className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section data-station="cta" className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <Reveal>
           <div className="relative overflow-hidden rounded-[2rem] border border-white/[0.08] bg-gradient-to-br from-[color:var(--tv-primary)]/[0.06] to-transparent p-12 text-center sm:p-16">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.12),transparent_70%)]" />

@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { communityGalleryPhotos, events, stateMembers } from '@/app/data';
+import { events, stateMembers } from '@/app/data';
+
+/** How long each photograph stays on screen. */
+const ROTATION_MS = 5000;
 
 interface HeroEventPhoto {
   id: string;
@@ -14,64 +17,172 @@ interface HeroEventPhoto {
   eventTheme: string;
   date: string;
   location: string;
-  attendees: string;
+  /** Only present where `data.ts` records a real headcount for that event. */
+  attendees?: string;
 }
 
-const eventPhotos: HeroEventPhoto[] = [
-  {
-    id: 'ctrl-future-main',
-    src: '/sample/CTRL+Future.jpeg',
-    alt: 'Tech Vriksh Ctrl + Future flagship community gathering at OpsTree Global, Noida',
-    eventTitle: 'CTRL + FUTURE',
-    eventCategory: 'AI · BUILD · CONNECT',
-    eventTheme: 'AI · COMMUNITY · BUILD',
-    date: 'June 2026',
-    location: 'Noida, India',
-    attendees: '80+',
-  },
-  {
-    id: 'workshop-session-1',
-    src: communityGalleryPhotos[0] || '/sample/CTRL+Future.jpeg',
-    alt: 'Tech Vriksh hands-on workshop session with students',
-    eventTitle: 'HANDS-ON LABS',
-    eventCategory: 'WORKSHOP · CODE',
-    eventTheme: 'PRACTICAL · LEARN · SHIP',
-    date: 'May 2025',
-    location: 'Delhi NCR, India',
-    attendees: '90+',
-  },
-  {
-    id: 'workshop-session-2',
-    src: communityGalleryPhotos[1] || '/sample/CTRL+Future.jpeg',
-    alt: 'Tech Vriksh Techpath campus edition meetup',
-    eventTitle: 'TECHPATH 1.O',
-    eventCategory: 'CAMPUS · ROADMAP',
-    eventTheme: 'CAREER · TECH · FUTURE',
-    date: 'May 2025',
-    location: 'Noida Campus',
-    attendees: '100+',
-  },
+/**
+ * Attendance is shown only where the event record actually states it — today
+ * that is Ctrl + Future, whose notes read "~80–90 attendees". Every other event
+ * in `data.ts` has no headcount, so its tile falls back to the community-wide
+ * member total rather than inventing a number for that specific room.
+ */
+const RECORDED_ATTENDEES: Record<string, string> = {
+  'ctrl-future': '80+'
+};
+
+/**
+ * The rotation source of truth: each frame names a real event and one real
+ * photograph from *that event's own* gallery, so a caption can never drift away
+ * from the picture it sits on — title, date and venue are read back off the
+ * event record instead of being retyped here.
+ *
+ * Consecutive frames deliberately come from different events, and the entries
+ * skip the gallery slots that are screenshots (PNG), portrait, or multi-megapixel
+ * panoramas rather than usable landscape photographs.
+ *
+ * Frame 0 is the local JPEG so the largest above-the-fold paint is served from
+ * /public instead of Drive.
+ */
+const PHOTO_SOURCES: { slug: string; galleryIndex?: number; localSrc?: string }[] = [
+  { slug: 'ctrl-future', localSrc: '/sample/CTRL+Future.jpeg' },
+  { slug: 'techpath-1o-discover-decide-dominate', galleryIndex: 1 },
+  { slug: 'snap-the-lens', galleryIndex: 0 },
+  { slug: 'ctrl-future', galleryIndex: 1 },
+  { slug: 'techpath-1o-discover-decide-dominate', galleryIndex: 3 },
+  { slug: 'snap-the-lens', galleryIndex: 1 }
 ];
 
+function buildHeroPhoto(source: (typeof PHOTO_SOURCES)[number]): HeroEventPhoto | null {
+  const event = events.find((entry) => entry.slug === source.slug);
+  if (!event) return null;
+
+  const src =
+    source.localSrc ??
+    (source.galleryIndex === undefined ? undefined : event.galleryImages?.[source.galleryIndex]);
+  if (!src) return null;
+
+  // Titles in `data.ts` are "Name — Tagline"; the hero shows the name large and
+  // the tagline as the strap line beneath it. No tagline → fall back to the
+  // event's real subtitle.
+  const [name, tagline] = event.title.split('—').map((part) => part.trim());
+
+  return {
+    id: `${event.slug}-${source.galleryIndex ?? 'cover'}`,
+    alt: event.venue
+      ? `Photograph from the Tech Vriksh ${event.title} event at ${event.venue}`
+      : `Photograph from the Tech Vriksh ${event.title} event`,
+    src,
+    eventTitle: name.toUpperCase(),
+    eventCategory: `${event.format} · ${event.kind}`.toUpperCase(),
+    eventTheme: (tagline ?? event.subtitle).toUpperCase(),
+    date: event.dateLabel,
+    location: event.venue ?? '',
+    attendees: RECORDED_ATTENDEES[event.slug]
+  };
+}
+
+const eventPhotos: HeroEventPhoto[] = PHOTO_SOURCES.map(buildHeroPhoto).filter(
+  (photo): photo is HeroEventPhoto => photo !== null
+);
+
 export function HeroVisual() {
+  // Deterministic first frame — never randomised, so SSR and hydration agree and
+  // the same photo is always the one that paints above the fold.
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  // Only frames that have been reached (plus the next one) are mounted, so the
+  // initial load fetches one photograph rather than all six. Once mounted a
+  // frame stays mounted, so looping never re-downloads anything.
+  const [mountedIndices, setMountedIndices] = useState<number[]>([0]);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isTabHidden, setIsTabHidden] = useState(false);
+  // Bumped on a manual thumbnail pick so the 5s clock restarts from that photo
+  // instead of advancing a moment later.
+  const [restartToken, setRestartToken] = useState(0);
+
+  const photoCount = eventPhotos.length;
   const activePhoto = eventPhotos[activePhotoIndex];
 
+  const totalMembers = stateMembers.reduce((sum, entry) => sum + entry.count, 0);
   const totalStates = stateMembers.length;
   const totalEvents = events.length;
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(query.matches);
+
+    const onChange = (event: MediaQueryListEvent) => setPrefersReducedMotion(event.matches);
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
+
+  // Page Visibility: a background tab should not burn timers or quietly advance
+  // the photo, so the interval is torn down while hidden and rebuilt on return.
+  useEffect(() => {
+    const sync = () => setIsTabHidden(document.visibilityState === 'hidden');
+    sync();
+
+    document.addEventListener('visibilitychange', sync);
+    return () => document.removeEventListener('visibilitychange', sync);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion || isTabHidden || photoCount < 2) return;
+
+    const interval = setInterval(() => {
+      setActivePhotoIndex((current) => (current + 1) % photoCount);
+    }, ROTATION_MS);
+
+    return () => clearInterval(interval);
+  }, [prefersReducedMotion, isTabHidden, photoCount, restartToken]);
+
+  // Mount the following frame as soon as the current one is showing, so it is
+  // decoded and ready well before its turn — the cross-fade never waits on a
+  // network round trip. The active frame is included defensively: with reduced
+  // motion the timer never runs, so a manual jump can land on a frame the
+  // rotation would not have reached yet.
+  useEffect(() => {
+    if (photoCount < 1) return;
+    const nextIndex = (activePhotoIndex + 1) % photoCount;
+
+    setMountedIndices((current) => {
+      const missing = [activePhotoIndex, nextIndex].filter((index) => !current.includes(index));
+      return missing.length > 0 ? [...current, ...missing] : current;
+    });
+  }, [activePhotoIndex, photoCount]);
+
+  const selectPhoto = (index: number) => {
+    setActivePhotoIndex(index);
+    setRestartToken((token) => token + 1);
+  };
+
+  if (!activePhoto) return null;
 
   return (
     <div className="group relative flex flex-col justify-between w-full min-h-[500px] sm:min-h-[540px] lg:h-full overflow-hidden rounded-[2rem] border border-[color:var(--tv-border)] bg-[color:var(--tv-surface)] shadow-[0_24px_64px_rgba(0,0,0,0.5)]">
       {/* ── Background Photograph ── */}
+      {/* Every frame shares this one fixed box and is absolutely positioned, so
+          swapping frames cannot reflow anything: the card keeps its size and no
+          text moves. Cross-fade is opacity only — no zoom, slide or bounce. */}
       <div className="absolute inset-0">
-        <Image
-          src={activePhoto.src}
-          alt={activePhoto.alt}
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
-          className="object-cover object-[center_28%] transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-        />
+        {eventPhotos.map((photo, index) =>
+          mountedIndices.includes(index) ? (
+            <Image
+              key={photo.id}
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              priority={index === 0}
+              aria-hidden={index !== activePhotoIndex}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
+              className={[
+                'object-cover object-[center_28%] duration-700 ease-out group-hover:scale-[1.02]',
+                prefersReducedMotion ? 'transition-transform' : 'transition-[opacity,transform]',
+                index === activePhotoIndex ? 'opacity-100' : 'opacity-0'
+              ].join(' ')}
+            />
+          ) : null
+        )}
 
         {/* Subtle top vignette for upper card contrast */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/75 via-black/30 to-transparent" />
@@ -108,9 +219,11 @@ export function HeroVisual() {
               </svg>
               <span>{activePhoto.date}</span>
             </div>
-            <div className="flex items-center gap-1.5 pl-4 text-white/70">
-              <span>{activePhoto.location}</span>
-            </div>
+            {activePhoto.location && (
+              <div className="flex items-center gap-1.5 pl-4 text-white/70">
+                <span>{activePhoto.location}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -131,10 +244,10 @@ export function HeroVisual() {
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
           <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
             <div className="tv-heading text-lg sm:text-2xl font-bold text-white tracking-tight">
-              {activePhoto.attendees}
+              {activePhoto.attendees ?? `${totalMembers}+`}
             </div>
             <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
-              Attendees
+              {activePhoto.attendees ? 'Attendees' : 'Members'}
             </div>
           </div>
 
@@ -160,29 +273,44 @@ export function HeroVisual() {
         {/* Bottom bar: Optional Photo Switchers + Explore Events link */}
         <div className="flex items-center justify-between pt-1 gap-2">
           {/* Real Photo Thumbnails */}
-          {eventPhotos.length > 1 && (
-            <div className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/60 p-1 backdrop-blur-sm">
-              {eventPhotos.map((photo, index) => (
-                <button
-                  key={photo.id}
-                  type="button"
-                  onClick={() => setActivePhotoIndex(index)}
-                  aria-label={`View ${photo.eventTitle}`}
-                  className={`relative h-7 w-7 sm:h-8 sm:w-8 overflow-hidden rounded-md border transition-all ${
-                    activePhotoIndex === index
-                      ? 'border-[color:var(--tv-primary)] ring-2 ring-[color:var(--tv-primary)]/50 scale-105 opacity-100'
-                      : 'border-white/20 opacity-50 hover:opacity-90'
-                  }`}
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    sizes="32px"
-                    className="object-cover"
-                  />
-                </button>
-              ))}
+          {photoCount > 1 && (
+            <div className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/60 p-1.5 backdrop-blur-sm sm:p-1">
+              {eventPhotos.map((photo, index) => {
+                const isActive = activePhotoIndex === index;
+
+                return (
+                  /* One control, three sizes. Six 32px thumbnails plus the CTA
+                     do not fit inside a 343px-wide card, so below `sm` each
+                     button renders as a dot instead — same buttons, same
+                     behaviour, no wrapping and no extra card height. The
+                     two-column band at 1024–1280px is the narrowest place the
+                     photo strip has to live (≈400px of inner width), so it uses
+                     28px there and returns to the original 32px from `xl`. */
+                  <button
+                    key={photo.id}
+                    type="button"
+                    onClick={() => selectPhoto(index)}
+                    aria-label={`View photo ${index + 1} of ${photoCount}: ${photo.eventTitle}`}
+                    aria-current={isActive}
+                    className={[
+                      'relative overflow-hidden transition-all',
+                      'h-1.5 rounded-full sm:h-7 sm:w-7 sm:rounded-md sm:border sm:bg-transparent xl:h-8 xl:w-8',
+                      isActive
+                        ? 'w-4 bg-[color:var(--tv-primary)] sm:scale-105 sm:border-[color:var(--tv-primary)] sm:opacity-100 sm:ring-2 sm:ring-[color:var(--tv-primary)]/50'
+                        : 'w-1.5 bg-white/35 hover:bg-white/60 sm:border-white/20 sm:opacity-50 sm:hover:opacity-90'
+                    ].join(' ')}
+                  >
+                    {/* Decorative: the button's aria-label already names the event. */}
+                    <Image
+                      src={photo.src}
+                      alt=""
+                      fill
+                      sizes="32px"
+                      className="hidden object-cover sm:block"
+                    />
+                  </button>
+                );
+              })}
             </div>
           )}
 

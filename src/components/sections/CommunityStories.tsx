@@ -95,9 +95,9 @@ export function CommunityStories() {
   const allPlaceholder = stories.every((s) => s.isPlaceholder);
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
       <Reveal>
-        <div className="mb-16">
+        <div className="mb-10 sm:mb-12">
           <div className="tv-section-label">REAL VOICES, REAL PEOPLE</div>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="tv-heading text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">
@@ -115,7 +115,7 @@ export function CommunityStories() {
       {/* Placeholder notice — visible only while all cards are placeholder */}
       {allPlaceholder && (
         <Reveal delay={100}>
-          <div className="mb-10 rounded-[1rem] border border-[color:var(--tv-primary)]/15 bg-[color:var(--tv-primary)]/[0.04] px-6 py-4">
+          <div className="mb-8 rounded-[1rem] border border-[color:var(--tv-primary)]/15 bg-[color:var(--tv-primary)]/[0.04] px-6 py-4">
             <p className="tv-mono text-xs uppercase tracking-[0.22em] text-[color:var(--tv-primary)]/70">
               Community stories coming soon
             </p>

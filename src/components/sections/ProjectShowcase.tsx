@@ -85,10 +85,10 @@ export function ProjectShowcase() {
   const allPlaceholder = projects.every((p) => p.isPlaceholder);
 
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
       <Reveal>
         {/* Section header */}
-        <div className="mb-16">
+        <div className="mb-10 sm:mb-12">
           <div className="tv-section-label">BUILT BY THE COMMUNITY</div>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="tv-heading text-4xl tracking-[-0.05em] sm:text-5xl lg:text-6xl">

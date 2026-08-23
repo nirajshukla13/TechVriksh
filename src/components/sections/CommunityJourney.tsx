@@ -121,7 +121,7 @@ export function JourneyColumn() {
 // ─── Legacy full section wrapper ──────────────────
 export function CommunityJourney() {
   return (
-    <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
       <JourneyColumn />
     </section>
   );

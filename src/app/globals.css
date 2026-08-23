@@ -408,10 +408,13 @@ body {
   }
 }
 
-/* ─── Section separators ─── */
+/* ─── Section separators ───
+   No margin of its own: the hairline sits centred inside the vertical padding
+   the two adjacent sections already provide, so the rhythm lives in one place
+   (the section `py-*`) instead of being the sum of three stacked gaps. */
 .section-divider {
   border-top: 1px solid var(--tv-border-section);
-  margin: 2.5rem 0;
+  margin: 0;
   position: relative;
 }
 
