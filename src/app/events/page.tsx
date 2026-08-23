@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { events, speakers, communityJoinUrl } from '../data';
+import { events, speakers, communityJoinUrl, publicStats, statText } from '../data';
 import { EventsClient } from './EventsClient';
 
 // Pull out the featured flagship event (Ctrl + Future)
@@ -102,13 +102,15 @@ export default async function EventsPage() {
                       {featuredEvent.description}
                     </p>
 
-                    {/* Stats row */}
+                    {/* Stats row — the first three are facts about this event and
+                        stay exact; the last is a community-wide figure, so it
+                        uses the rounded one every other page quotes. */}
                     <div className="flex flex-wrap gap-5 pt-1">
                       {[
                         { value: '80+', label: 'Attendees' },
                         { value: '4', label: 'Sessions' },
                         { value: '3', label: 'Speakers' },
-                        { value: '18', label: 'States' },
+                        { value: statText(publicStats.states), label: 'States' },
                       ].map((stat) => (
                         <div key={stat.label} className="text-center">
                           <div className="tv-heading text-2xl sm:text-3xl font-bold text-white">

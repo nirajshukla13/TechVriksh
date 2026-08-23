@@ -149,11 +149,66 @@ const driveImage = (fileId: string) => `https://drive.google.com/uc?export=view&
 
 export const techVrikshLogoUrl = '/tech-vriksh-logo.webp';
 
-export const communityJoinUrl = 'https://forms.gle/CCyMWwfZBeB7QFw';
+/** Student sign-up for the community itself. Free, open to anyone. */
+export const communityJoinUrl = 'https://forms.gle/ZAGhsuQkudpAP9xu9';
+
+/**
+ * Application form for the unpaid core-team roles listed on the Join page.
+ * A separate form from `communityJoinUrl` on purpose: the role cards used to
+ * point their "Apply Now" buttons at the community sign-up, so anyone applying
+ * for a position filled in a general membership form instead.
+ */
+export const teamHiringFormUrl = 'https://forms.gle/gqpUWDEDHaBJJ8QRA';
 
 export const communityInstagramUrl = 'https://www.instagram.com/techvrikshofficial/';
 
 export const communityLinkedInUrl = 'https://www.linkedin.com/company/tech-vriksh/';
+
+// ─── Partnerships ─────────────────────────────────────────────────────────────
+// Contact routes for companies and colleges, kept separate from the student
+// join form above: `communityJoinUrl` is a student application, not a business
+// enquiry, and a sponsor landing in it reads as a dead end.
+//
+// `partnershipFormUrl` is still empty, and that is not an oversight. The partner
+// page renders each contact tile only when its constant is non-empty, so an
+// unfilled route simply does not appear — no placeholder address, no link to
+// nowhere. Fill it in and its tile shows up with no other change needed.
+export const partnershipEmail = 'official.techvriksh@yahoo.com';
+export const partnershipFormUrl = '';
+
+/**
+ * Venues that have genuinely hosted a Tech Vriksh event, for use as social
+ * proof. Add a name here only when an entry in `events` or `collaborations`
+ * records it: the `sponsors` arrays on `hackathons` are scaffold — one of them
+ * literally reads 'Sample partner slot' and its notes say 'Sponsor list can be
+ * swapped later' — so they are not evidence of a real arrangement.
+ */
+export const eventHostVenues = ['OpsTree Global, Noida'];
+
+/**
+ * Collaborations with organisations outside Tech Vriksh. Shared by the Join and
+ * Partner pages so the two can never drift apart — this list used to live as a
+ * local `recentActivity` array inside the Join page, which is how the community
+ * ended up with two versions of its own timeline (see `journeyMilestones`).
+ */
+export const collaborations = [
+  {
+    label: 'Bootcamp',
+    title: 'Ethereum Build Camp',
+    detail: '8-day virtual bootcamp by Aya Community — Tech Vriksh as event partner.'
+  },
+  {
+    label: 'In-person',
+    title: 'Road to Devcon 8, Delhi NCR',
+    detail: 'Co-organized meetup bringing the Ethereum Build Camp community together offline.'
+  },
+  {
+    label: 'Workshop',
+    title: 'Ctrl + Future: Agentic Observability',
+    detail:
+      'Hands-on session hosted at OpsTree Global, Noida — part of the ongoing Ctrl + Future series.'
+  }
+];
 
 export const communityGalleryPhotos = [
   driveImage('1aiE7L3NvIgTx2KHtJeedI8fPFsAgS5pz'),
@@ -240,6 +295,11 @@ export const events: EventItem[] = [
     description:
       'An informal discussion evening with peer questions, quick speaker notes, and room for open conversation.',
     image: driveImage('1D0Z6SFOyr7ygd9kVF-3RW48cBjtWU5kL'),
+    // A real photograph from the evening, out of the event's own Drive folder
+    // ("Tech Baithak - 15 November 2025", 5th row). 1600×1200 landscape — the
+    // rest of that folder is portrait phone shots, and `image` above is the
+    // portrait poster, so this is the only frame-shaped picture of the event.
+    galleryImages: [driveImage('1gEqMD-X750DtmutBXPaihC07EfmS1k3q')],
     venue: 'Community meetup room',
     registrationUrl: 'https://lu.ma/tech-vriksh-tech-baithak'
   },
@@ -614,6 +674,53 @@ export const teamDepartments: TeamDepartment[] = [
     ]
   }
 ];
+
+// ─── Derived community totals ─────────────────────────────────────────────────
+// Counted from the records above rather than typed out, so a stated figure can
+// never drift from the data behind it. The About page previously claimed a team
+// of 19 while `teamDepartments` held 14.
+export const teamMemberCount = teamDepartments.reduce(
+  (total, department) => total + department.members.length,
+  0
+);
+
+export const communityMemberTotal = stateMembers.reduce((total, entry) => total + entry.count, 0);
+
+export const communityStateCount = stateMembers.length;
+
+// ─── Public-facing figures ────────────────────────────────────────────────────
+// What the site actually shows. The exact counts above stay the internal source
+// of truth and still drive the map's per-state markers, but they are not quoted
+// in copy any more: a precise headcount is stale the day after someone joins,
+// and it invites a reader to check the arithmetic instead of reading the point.
+// These are round, deliberately approximate, and defined once — change a figure
+// here and the homepage, footer, About and Partner pages all follow.
+export type PublicStat = {
+  count: number;
+  suffix: string;
+  label: string;
+  /** Optional qualifier rendered under the label. */
+  note?: string;
+};
+
+export const publicStats: Record<'members' | 'states' | 'events' | 'team', PublicStat> = {
+  members: { count: 1000, suffix: '+', label: 'Community members' },
+  states: { count: 15, suffix: '+', label: 'States' },
+  events: { count: 14, suffix: '+', label: 'Events' },
+  team: { count: 15, suffix: '+', label: 'Core team', note: 'Working constantly' }
+};
+
+/**
+ * `1000+`, `15+` … for prose and for static stat strips. Stat blocks that count
+ * up pass `count` and `suffix` to `<Counter />` instead, so the suffix is never
+ * spelled out twice.
+ */
+export const statText = (stat: PublicStat) => `${stat.count}${stat.suffix}`;
+
+/** Whoever `teamDepartments` records as Founder — the contact for partnerships. */
+export const founder = teamDepartments
+  .flatMap((department) => department.members)
+  .find((member) => member.role === 'Founder');
 
 // ─── Community journey milestones ───────────────────────────────────────────
 // Derived from actual Tech Vriksh events — do not add milestones without

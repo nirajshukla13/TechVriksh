@@ -6,8 +6,8 @@ import { DriveVideoEmbed } from '@/components/drive-video-embed';
 import { IndiaMapLoader } from '@/components/india-map-loader';
 import { PremiumCard, CardImage, CardBadge } from '@/components/ui/PremiumCard';
 import { HeroVisual } from '@/components/ui/HeroVisual';
-import { ValueProposition, CommunityStories, ProjectShowcase, JourneyColumn } from '@/components/sections';
-import { communityGalleryPhotos, events, stateMembers, communityJoinUrl } from './data';
+import { ValueProposition, CommunityStories, ProjectShowcase } from '@/components/sections';
+import { communityGalleryPhotos, events, stateMembers, communityJoinUrl, publicStats, statText } from './data';
 
 export default function HomePage() {
   // Featured events
@@ -15,10 +15,6 @@ export default function HomePage() {
   const featuredEvents = featuredEventSlugs
     .map((slug) => events.find((event) => event.slug === slug))
     .filter((event): event is NonNullable<typeof event> => Boolean(event));
-  // Calculate stats
-  const totalMembers = stateMembers.reduce((sum, entry) => sum + entry.count, 0);
-  const totalStates = stateMembers.length;
-  const totalEvents = events.length;
   // Derived, not hardcoded, so the recap can't drift from the events list.
   const sessions2025 = events.filter((event) => event.dateLabel.endsWith('2025')).length;
 
@@ -81,51 +77,6 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          02 — COMMUNITY STATS
-      ═══════════════════════════════════════════ */}
-      <section data-station="community" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-        <Reveal>
-          <div className="section-backdrop">
-            {/* Headline sits *beside* the figures rather than above them. Stacked,
-                the three heading lines plus three full-size stats cost ~420px of
-                height on desktop and ~500px on mobile (where the stats also went
-                one-per-row) — for one headline and three numbers. */}
-            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
-              <div>
-                <div className="tv-section-label">Community</div>
-                <h2 className="tv-heading mt-3 text-3xl leading-[1.05] tracking-[-0.05em] sm:text-4xl lg:text-[2.75rem]">
-                  People.<br />
-                  Ideas.<br />
-                  Opportunities.
-                </h2>
-              </div>
-
-              {/* One card, three cells split by hairlines — stays 3-across at every
-                  width, so it never reflows into a tall stack on mobile. */}
-              <div className="tv-card grid grid-cols-3 divide-x divide-[color:var(--tv-border)]">
-                {[
-                  { label: 'Members', target: totalMembers, suffix: '+' },
-                  { label: 'States', target: totalStates, suffix: '' },
-                  { label: 'Events', target: totalEvents, suffix: '+' }
-                ].map((stat) => (
-                  <div key={stat.label} className="group px-2 py-6 text-center sm:px-4 sm:py-7">
-                    <div className="tv-heading text-[1.75rem] leading-none tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:[text-shadow:0_0_18px_rgba(57,217,138,0.32)] sm:text-4xl lg:text-[2.75rem]">
-                      <Counter target={stat.target} suffix={stat.suffix} />
-                    </div>
-                    <div className="tv-mono mt-2.5 text-[0.65rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-secondary)] sm:text-xs sm:tracking-[0.24em]">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      <div className="section-divider" />
-
-      {/* ═══════════════════════════════════════════
           02 — VALUE PROPOSITION
       ═══════════════════════════════════════════ */}
       <ValueProposition />
@@ -137,49 +88,61 @@ export default function HomePage() {
       ═══════════════════════════════════════════ */}
       <section data-station="highlights" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
-          <div className="section-backdrop mb-8">
-            <div className="tv-section-label"></div>
-            <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
-              What our sessions<br />actually look like
-            </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[color:var(--tv-text-secondary)]">
-              Real photos from live workshops and meetups — the people, the rooms, the work in progress.
-            </p>
-          </div>
+          {/* Heading and gallery share one backdrop. They used to be two separate
+              blocks, which paid the card's 3rem padding twice and spent another
+              32px on the gap between them. Putting the strap line beside the
+              heading rather than under it saves a further two lines. */}
+          <div className="section-backdrop">
+            <div className="grid gap-3 lg:grid-cols-2 lg:items-end lg:gap-10">
+              <h2 className="tv-heading text-3xl tracking-[-0.05em] sm:text-4xl">
+                What our sessions<br />actually look like
+              </h2>
+              <p className="text-sm leading-6 text-[color:var(--tv-text-secondary)] sm:text-base sm:leading-7">
+                Real photos from live workshops and meetups — the people, the rooms, the work in progress.
+              </p>
+            </div>
 
-          {/* Editorial grid layout */}
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Large featured image */}
-            {communityGalleryPhotos[0] && (
-              <Reveal className="md:row-span-2">
-                <div className="group relative h-full overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.02]">
-                  <Image
-                    src={communityGalleryPhotos[0]}
-                    alt="Tech Vriksh community session"
-                    width={1200}
-                    height={900}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                </div>
-              </Reveal>
-            )}
+            {/* The frames used to be sized by aspect ratio, so their height grew
+                with the viewport: two stacked `4/3` half-width cells came to
+                ~916px on a 1280px screen and the section filled a laptop display
+                on its own. The row height is fixed now and the photographs crop
+                into it, so the gallery reads as a band rather than a page. Same
+                three photographs — one wide, two beside it — and on mobile the
+                small pair sits side by side instead of stacking into a third
+                screenful. */}
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:h-[300px] md:grid-cols-3 md:grid-rows-2 lg:h-[340px] xl:h-[380px]">
+              {/* Large featured image */}
+              {communityGalleryPhotos[0] && (
+                <Reveal className="col-span-2 md:row-span-2">
+                  <div className="group relative aspect-[16/9] h-full overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.02] md:aspect-auto">
+                    <Image
+                      src={communityGalleryPhotos[0]}
+                      alt="Tech Vriksh community session"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 66vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  </div>
+                </Reveal>
+              )}
 
-            {/* Two smaller images */}
-            {communityGalleryPhotos.slice(1, 3).map((src, index) => (
-              <Reveal key={src} delay={index * 100}>
-                <div className="group relative overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.02]">
-                  <Image
-                    src={src}
-                    alt="Tech Vriksh community session"
-                    width={1200}
-                    height={900}
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                </div>
-              </Reveal>
-            ))}
+              {/* Two smaller images */}
+              {communityGalleryPhotos.slice(1, 3).map((src, index) => (
+                <Reveal key={src} delay={index * 100}>
+                  <div className="group relative aspect-[4/3] h-full overflow-hidden rounded-[1.6rem] border border-white/[0.08] bg-white/[0.02] md:aspect-auto">
+                    <Image
+                      src={src}
+                      alt="Tech Vriksh community session"
+                      fill
+                      sizes="(max-width: 768px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </Reveal>
       </section>
@@ -316,61 +279,124 @@ export default function HomePage() {
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          08 — BRAND + COMMUNITY JOURNEY (two-column)
+          08 — TECH VRIKSH BRAND
       ═══════════════════════════════════════════ */}
+      {/* The journey timeline used to occupy a 60% column beside this copy. It
+          now lives on /about, which renders all seven `journeyMilestones` from
+          data.ts rather than the condensed five hardcoded inside
+          CommunityJourney.tsx — so the site no longer carries two versions of
+          the same story. What remains is the brand context, reflowed into the
+          heading-left / copy-right grid the Community and Recap sections
+          already use, and given the same `section-backdrop` panel as the
+          sections either side of it. */}
       <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-14">
-
-          {/* ── LEFT COLUMN — Tech Vriksh brand / community context ── */}
-          <div className="flex flex-col gap-6 lg:w-[40%] lg:sticky lg:top-24">
-            <Reveal>
-              <div className="space-y-4">
+        <Reveal>
+          <div className="section-backdrop">
+            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-14">
+              <div>
                 <div className="tv-section-label">TECH VRIKSH</div>
-                <h2 className="tv-heading text-3xl tracking-[-0.04em] leading-tight sm:text-4xl lg:text-[2.6rem]">
+                <h2 className="tv-heading mt-3 text-3xl tracking-[-0.04em] leading-tight sm:text-4xl lg:text-[2.6rem]">
                   A growing student-driven technology community.
                 </h2>
+              </div>
+
+              <div className="space-y-4">
+                {/* Two credits, one sentence. "Founded by" and "run with" are
+                    parallel participles hanging off Tech Vriksh, so the founder
+                    and the team read as equal parts of the same clause rather
+                    than a name followed by an afterthought — both carry the
+                    brighter primary-text weight for the same reason. */}
                 <p className="text-base leading-relaxed text-[color:var(--tv-text-secondary)]">
                   Founded by{' '}
-                  <span className="text-[color:var(--tv-text-primary)] font-medium">Krishna Agarwal</span>,
-                  Tech Vriksh connects students and builders through practical workshops, hackathons,
-                  collaborative learning, and hands-on projects.
+                  <span className="text-[color:var(--tv-text-primary)] font-medium">Krishna Agarwal</span>{' '}
+                  and run with the constant support of{' '}
+                  <span className="text-[color:var(--tv-text-primary)] font-medium">the team</span>,
+                  Tech Vriksh connects students and builders through practical workshops,
+                  hackathons, collaborative learning, and hands-on projects.
                 </p>
                 <p className="text-sm leading-relaxed text-[color:var(--tv-text-muted)]">
                   Bridging the gap between classroom theory and real-world tech through honest community-driven exposure.
                 </p>
+                {/* Without this the homepage drops the journey with no route to
+                    it. The label matches the /about heading so the destination
+                    is predictable. */}
+                <Link
+                  href="/about"
+                  className="tv-mono inline-flex items-center gap-2 pt-1 text-xs uppercase tracking-[0.24em] text-[color:var(--tv-primary)] transition-all hover:gap-3"
+                  data-cursor-hover
+                >
+                  How it grew, in order <span className="transition-transform">→</span>
+                </Link>
               </div>
-            </Reveal>
+            </div>
           </div>
-
-          {/* ── RIGHT COLUMN — Streamlined Journey timeline ── */}
-          <div className="lg:w-[60%]">
-            <JourneyColumn />
-          </div>
-        </div>
+        </Reveal>
       </section>
 
       <div className="section-divider" />
 
       {/* ═══════════════════════════════════════════
-          09 — INDIA COMMUNITY MAP
+          09 — COMMUNITY ACROSS INDIA
+          The figures used to have a section of their own directly under the
+          hero, which repeated the hero card's own stat row and spent a full
+          section of height to say three numbers. They run down the right of the
+          map now, beside the geography they actually describe.
+
+          Three columns from `lg` up, so the heading sits *beside* the map rather
+          than stacked above it and costs no vertical height at all on a laptop —
+          it was previously ~210px of the section's total on its own.
       ═══════════════════════════════════════════ */}
       <section data-station="india" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <Reveal>
           <div className="section-backdrop">
-            <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-              <div className="max-w-md">
-                <div className="tv-section-label"></div>
-                <h2 className="tv-heading mt-4 text-4xl tracking-[-0.05em] sm:text-5xl">
+            <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)_190px] lg:items-stretch lg:gap-7">
+              <div className="lg:flex lg:flex-col lg:justify-center">
+                <div className="tv-section-label">Community</div>
+                {/* Steps back down at `lg`, where the column is only 220px wide —
+                    36px would set "Our community" wider than the column. */}
+                <h2 className="tv-heading mt-3 text-3xl tracking-[-0.05em] sm:text-4xl lg:text-[1.75rem] xl:text-[2rem]">
                   Our community<br />across India
                 </h2>
-                <p className="mt-4 text-base leading-7 text-[color:var(--tv-text-secondary)]">
-                  {stateMembers.length} states and counting — hover a marker to see the count for that state.
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[color:var(--tv-text-secondary)]">
+                  People, ideas and opportunities across {statText(publicStats.states)} states and
+                  counting — hover a marker to see a state.
                 </p>
               </div>
 
               <div className="relative">
                 <div className="pointer-events-none absolute -inset-6 rounded-[2.4rem] bg-[radial-gradient(circle_at_50%_50%,rgba(57,217,138,0.08),transparent_60%)] blur-2xl" />
                 <IndiaMapLoader data={stateMembers} />
+              </div>
+
+              {/* Two shapes, one list. Below `lg` each figure is a compact row —
+                  number on the left, label on the right — which fits four of them
+                  into ~208px instead of the ~400px four stacked blocks needed. At
+                  `lg` they return to centred stacks that flex to the map's height,
+                  so both columns bottom out together. `divide-y` is safe here: a
+                  single-column flex list, never a grid. */}
+              <div className="tv-card flex flex-col divide-y divide-[color:var(--tv-border)]">
+                {[publicStats.members, publicStats.states, publicStats.events, publicStats.team].map(
+                  (stat) => (
+                    <div
+                      key={stat.label}
+                      className="group flex flex-1 items-baseline justify-between gap-3 px-5 py-3 lg:flex-col lg:items-start lg:justify-center lg:gap-0 lg:py-4"
+                    >
+                      <div className="tv-heading text-[1.75rem] leading-none tracking-[-0.06em] text-[color:var(--tv-text-primary)] transition-all duration-500 group-hover:[text-shadow:0_0_18px_rgba(57,217,138,0.32)] sm:text-[2rem]">
+                        <Counter target={stat.count} suffix={stat.suffix} />
+                      </div>
+                      <div className="text-right lg:mt-2 lg:text-left">
+                        <div className="tv-mono text-[0.65rem] uppercase tracking-[0.2em] text-[color:var(--tv-text-secondary)]">
+                          {stat.label}
+                        </div>
+                        {stat.note && (
+                          <div className="tv-mono mt-1 text-[0.6rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-tertiary)]">
+                            {stat.note}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           </div>

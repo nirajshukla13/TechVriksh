@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { events, stateMembers } from '@/app/data';
+import { events, publicStats, statText } from '@/app/data';
 
 /** How long each photograph stays on screen. */
 const ROTATION_MS = 5000;
@@ -33,9 +33,9 @@ const RECORDED_ATTENDEES: Record<string, string> = {
 
 /**
  * The rotation source of truth: each frame names a real event and one real
- * photograph from *that event's own* gallery, so a caption can never drift away
- * from the picture it sits on — title, date and venue are read back off the
- * event record instead of being retyped here.
+ * image belonging to *that event*, so a caption can never drift away from the
+ * picture it sits on — title, date and venue are read back off the event record
+ * instead of being retyped here.
  *
  * Consecutive frames deliberately come from different events, and the entries
  * skip the gallery slots that are screenshots (PNG), portrait, or multi-megapixel
@@ -48,6 +48,7 @@ const PHOTO_SOURCES: { slug: string; galleryIndex?: number; localSrc?: string }[
   { slug: 'ctrl-future', localSrc: '/sample/CTRL+Future.jpeg' },
   { slug: 'techpath-1o-discover-decide-dominate', galleryIndex: 1 },
   { slug: 'snap-the-lens', galleryIndex: 0 },
+  { slug: 'tech-baithak', galleryIndex: 0 },
   { slug: 'ctrl-future', galleryIndex: 1 },
   { slug: 'techpath-1o-discover-decide-dominate', galleryIndex: 3 },
   { slug: 'snap-the-lens', galleryIndex: 1 }
@@ -93,7 +94,7 @@ export function HeroVisual() {
   // the same photo is always the one that paints above the fold.
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   // Only frames that have been reached (plus the next one) are mounted, so the
-  // initial load fetches one photograph rather than all six. Once mounted a
+  // initial load fetches one photograph rather than all seven. Once mounted a
   // frame stays mounted, so looping never re-downloads anything.
   const [mountedIndices, setMountedIndices] = useState<number[]>([0]);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -104,10 +105,6 @@ export function HeroVisual() {
 
   const photoCount = eventPhotos.length;
   const activePhoto = eventPhotos[activePhotoIndex];
-
-  const totalMembers = stateMembers.reduce((sum, entry) => sum + entry.count, 0);
-  const totalStates = stateMembers.length;
-  const totalEvents = events.length;
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -178,6 +175,8 @@ export function HeroVisual() {
               aria-hidden={index !== activePhotoIndex}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 640px"
               className={[
+                // Every frame is a wide event photograph, so they all share one
+                // framing: faces sit a little above centre.
                 'object-cover object-[center_28%] duration-700 ease-out group-hover:scale-[1.02]',
                 prefersReducedMotion ? 'transition-transform' : 'transition-[opacity,transform]',
                 index === activePhotoIndex ? 'opacity-100' : 'opacity-0'
@@ -246,7 +245,7 @@ export function HeroVisual() {
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
           <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
             <div className="tv-heading text-lg sm:text-2xl font-bold text-white tracking-tight">
-              {activePhoto.attendees ?? `${totalMembers}+`}
+              {activePhoto.attendees ?? statText(publicStats.members)}
             </div>
             <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
               {activePhoto.attendees ? 'Attendees' : 'Members'}
@@ -255,7 +254,7 @@ export function HeroVisual() {
 
           <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
             <div className="tv-heading text-lg sm:text-2xl font-bold text-[color:var(--tv-primary-light)] tracking-tight">
-              {totalStates}
+              {statText(publicStats.states)}
             </div>
             <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
               States
@@ -264,7 +263,7 @@ export function HeroVisual() {
 
           <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
             <div className="tv-heading text-lg sm:text-2xl font-bold text-[color:var(--tv-cyan)] tracking-tight">
-              {totalEvents}+
+              {statText(publicStats.events)}
             </div>
             <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
               Events
@@ -276,18 +275,19 @@ export function HeroVisual() {
         <div className="flex items-center justify-between pt-1 gap-2">
           {/* Real Photo Thumbnails */}
           {photoCount > 1 && (
-            <div className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/60 p-1.5 backdrop-blur-sm sm:p-1">
+            <div className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/60 p-1.5 backdrop-blur-sm sm:gap-1 sm:p-1 xl:gap-1.5">
               {eventPhotos.map((photo, index) => {
                 const isActive = activePhotoIndex === index;
 
                 return (
-                  /* One control, three sizes. Six 32px thumbnails plus the CTA
+                  /* One control, three sizes. Seven 32px thumbnails plus the CTA
                      do not fit inside a 343px-wide card, so below `sm` each
                      button renders as a dot instead — same buttons, same
                      behaviour, no wrapping and no extra card height. The
                      two-column band at 1024–1280px is the narrowest place the
                      photo strip has to live (≈400px of inner width), so it uses
-                     28px there and returns to the original 32px from `xl`. */
+                     28px and a tighter gap there and returns to the original
+                     32px from `xl`. */
                   <button
                     key={photo.id}
                     type="button"

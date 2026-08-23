@@ -1,5 +1,13 @@
 import Image from 'next/image';
-import { teamDepartments, communityLinkedInUrl, communityJoinUrl } from '../data';
+import Link from 'next/link';
+import {
+  teamDepartments,
+  journeyMilestones,
+  publicStats,
+  statText,
+  communityLinkedInUrl,
+  communityJoinUrl
+} from '../data';
 
 const linkedInIcon = (
   <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 fill-current">
@@ -79,7 +87,7 @@ export default function AboutPage() {
                 <span className="leading-relaxed">Running unpaid &amp; student-driven</span>
               </div>
               <div className="flex items-center rounded-2xl border border-[color:var(--tv-cyan)]/20 bg-white/[0.03] px-5 py-3.5 text-xs sm:text-sm tv-mono text-[color:var(--tv-text-secondary)] transition-all hover:bg-white/[0.06] hover:text-white">
-                <span className="leading-relaxed">Active team of 19 members across India</span>
+                <span className="leading-relaxed">A family of {statText(publicStats.team)} members working constantly</span>
               </div>
               <div className="flex items-center rounded-2xl border border-[color:var(--tv-magenta)]/20 bg-white/[0.03] px-5 py-3.5 text-xs sm:text-sm tv-mono text-[color:var(--tv-text-secondary)] transition-all hover:bg-white/[0.06] hover:text-white">
                 <span className="leading-relaxed">Hosted at OpsTree Global, ThoughtWorks &amp; Microsoft</span>
@@ -111,7 +119,119 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 2: TEAM PROFILES (PROMINENT 3-COL GRID)
+          SECTION 2: THE JOURNEY
+      ═══════════════════════════════════════════ */}
+      {/* Renders `journeyMilestones` from data.ts, which until now was imported
+          by nothing: the homepage timeline carries its own condensed five-entry
+          copy inside CommunityJourney.tsx. The homepage keeps that teaser — it is
+          one of the 3D journey's scroll stations — while the full seven-milestone
+          record lives here, where there is room for the detail.
+
+          Seven full-width cards in one column ran to roughly 1120px, a whole
+          laptop screen for seven short paragraphs, and every description was a
+          single line floating in a 1130px-wide box. From `lg` the list becomes
+          two columns, which halves the row count and lets each description use
+          the width it actually needs. Order still reads correctly — the grid
+          fills row-major and every entry prints its own date. Below `lg` the
+          single column and its rail are exactly as they were, because a narrow
+          screen has no horizontal room to trade. */}
+      <section className="mt-20">
+        {/* Strap line sits beside the heading from `lg` rather than under it,
+            which is two lines of height the header no longer costs. */}
+        <div className="mb-8 grid gap-3 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-10">
+          <div className="space-y-2">
+            <div className="tv-mono text-xs uppercase tracking-[0.36em] text-[color:var(--tv-cyan)] font-semibold">
+              The Journey
+            </div>
+            {/* Same step as the Team heading below it — the height came out of
+                the layout, not the type scale. */}
+            <h2 className="tv-heading text-4xl sm:text-5xl font-bold tracking-[-0.04em] text-white">
+              How it grew, in order.
+            </h2>
+          </div>
+          <p className="max-w-xl text-sm text-[color:var(--tv-text-muted)] lg:max-w-sm lg:text-right">
+            Every milestone below is a real event with a real date — {statText(publicStats.members)} members
+            across {statText(publicStats.states)} states came from these, not from a launch plan.
+          </p>
+        </div>
+
+        <div className="relative pl-8 sm:pl-10 lg:pl-0">
+          {/* Continuous rail, fading out into the future milestone. Single-column
+              only: there is no one line that can thread two columns of cards. */}
+          <div
+            className="absolute bottom-6 left-[0.4rem] top-3 w-[2px] bg-gradient-to-b from-[color:var(--tv-primary)] via-[rgba(57,217,138,0.4)] to-transparent sm:left-[0.55rem] lg:hidden"
+            aria-hidden="true"
+          />
+
+          <ol className="grid gap-4 lg:grid-cols-2">
+            {journeyMilestones.map((milestone) => {
+              const isFuture = !!milestone.isFuture;
+
+              return (
+                /* The future milestone closes the sequence, so it takes the full
+                   width of the last row instead of leaving a hole beside it. */
+                <li
+                  key={milestone.title}
+                  className={`relative ${isFuture ? 'lg:col-span-2' : ''}`}
+                >
+                  {/* Node on the rail */}
+                  <div className="absolute -left-8 top-4 flex h-4 w-4 items-center justify-center sm:-left-10 lg:hidden">
+                    {isFuture && (
+                      <span className="absolute h-full w-full animate-ping rounded-full bg-[rgba(57,217,138,0.3)]" />
+                    )}
+                    <span
+                      className={`h-3 w-3 rounded-full border-2 border-[color:var(--tv-primary)] ${
+                        isFuture
+                          ? 'bg-[color:var(--tv-primary)] shadow-[0_0_8px_rgba(57,217,138,0.8)]'
+                          : 'bg-[color:var(--tv-surface)]'
+                      }`}
+                    />
+                  </div>
+
+                  <div
+                    className={`group h-full rounded-2xl border bg-gradient-to-b from-[rgba(16,30,26,0.7)] to-[rgba(11,23,20,0.9)] p-4 sm:p-5 transition-all duration-300 hover:-translate-y-0.5 ${
+                      isFuture
+                        ? 'border-[rgba(57,217,138,0.3)] hover:border-[rgba(57,217,138,0.6)]'
+                        : 'border-[color:var(--tv-border)] hover:border-[rgba(57,217,138,0.4)]'
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      {/* Carries the rail's pulse into grid mode, where the rail
+                          and its nodes are hidden. `self-center` because the
+                          row is baseline-aligned and a dot has no baseline. */}
+                      {isFuture && (
+                        <span
+                          className="relative hidden h-2 w-2 shrink-0 self-center lg:flex"
+                          aria-hidden="true"
+                        >
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[rgba(57,217,138,0.5)]" />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-[color:var(--tv-primary)]" />
+                        </span>
+                      )}
+                      <span
+                        className={`tv-mono text-[0.66rem] uppercase tracking-[0.2em] font-semibold ${
+                          isFuture ? 'text-[color:var(--tv-primary)]' : 'text-[color:var(--tv-text-muted)]'
+                        }`}
+                      >
+                        {milestone.period}
+                      </span>
+                      <h3 className="tv-heading text-base sm:text-lg font-semibold tracking-[-0.02em] text-white transition-colors group-hover:text-[color:var(--tv-primary)]">
+                        {milestone.title}
+                      </h3>
+                    </div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-[color:var(--tv-text-secondary)]">
+                      {milestone.description}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 3: TEAM PROFILES (PROMINENT 3-COL GRID)
       ═══════════════════════════════════════════ */}
       <section className="mt-20">
         <div className="mb-10 space-y-2">
@@ -122,7 +242,7 @@ export default function AboutPage() {
             Tech Vriksh Team Profiles
           </h2>
           <p className="text-sm sm:text-base text-[color:var(--tv-text-muted)] max-w-xl">
-            19 student leaders and builders making events, community sessions, and programs happen every week.
+            {statText(publicStats.team)} student leaders and builders making events, community sessions, and programs happen every week.
           </p>
         </div>
 
@@ -188,7 +308,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          SECTION 3: BOTTOM CTA
+          SECTION 4: BOTTOM CTA
       ═══════════════════════════════════════════ */}
       <section className="mt-20 text-center">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.6)] to-[rgba(11,23,20,0.85)] p-10 sm:p-14 space-y-5 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
@@ -215,6 +335,15 @@ export default function AboutPage() {
                 <span>↗</span>
               </a>
             </div>
+
+            {/* Organisations need a different door than students do. */}
+            <p className="pt-2 text-xs text-[color:var(--tv-text-tertiary)]">
+              Representing a company or college?{' '}
+              <Link href="/partner" className="text-[color:var(--tv-primary)] hover:underline">
+                Partner with us
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </section>

@@ -1,5 +1,11 @@
 import Image from 'next/image';
-import { communityInstagramUrl, communityJoinUrl, communityLinkedInUrl } from '../data';
+import {
+  collaborations,
+  communityInstagramUrl,
+  communityJoinUrl,
+  communityLinkedInUrl,
+  teamHiringFormUrl
+} from '../data';
 
 const openRoles = [
   {
@@ -19,24 +25,6 @@ const openRoles = [
     blurb: 'Cut event highlights, reels, and workshop clips. Bring raw footage into polished stories people share.',
     commitment: 'Per-project',
     type: 'Remote',
-  },
-];
-
-const recentActivity = [
-  {
-    label: 'Bootcamp',
-    title: 'Ethereum Build Camp',
-    detail: '8-day virtual bootcamp by Aya Community — Tech Vriksh as event partner.',
-  },
-  {
-    label: 'In-person',
-    title: 'Road to Devcon 8, Delhi NCR',
-    detail: 'Co-organized meetup bringing the Ethereum Build Camp community together offline.',
-  },
-  {
-    label: 'Workshop',
-    title: 'Ctrl + Future: Agentic Observability',
-    detail: 'Hands-on session hosted at OpsTree Global, Noida — part of the ongoing Ctrl + Future series.',
   },
 ];
 
@@ -254,11 +242,11 @@ export default function JoinPage() {
               Apply for Open Team Roles
             </h2>
             <p className="text-sm text-[color:var(--tv-text-muted)] max-w-lg">
-              Unpaid, student-led roles designed to build real portfolio experience.
+              Unpaid, student-driven roles designed to build real portfolio experience.
             </p>
           </div>
           <span className="tv-mono text-xs uppercase tracking-[0.2em] text-[color:var(--tv-primary)] border border-[color:var(--tv-primary)]/30 rounded-full px-4 py-1.5 bg-[color:var(--tv-primary)]/10 font-semibold self-start sm:self-auto">
-            Hiring Now &bull; 3 Roles
+            Hiring Now &bull; {openRoles.length} Roles
           </span>
         </div>
 
@@ -288,8 +276,11 @@ export default function JoinPage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-white/[0.08]">
+                {/* The hiring form, not `communityJoinUrl`. These buttons used to
+                    open the general membership sign-up, so every role applicant
+                    filled in the wrong form. */}
                 <a
-                  href={communityJoinUrl}
+                  href={teamHiringFormUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="tv-button tv-button-primary inline-flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-xs font-semibold tv-mono uppercase tracking-[0.16em] text-[color:var(--tv-text-primary)]"
@@ -315,7 +306,7 @@ export default function JoinPage() {
           </div>
           
           <ul className="space-y-4">
-            {recentActivity.map((item) => (
+            {collaborations.map((item) => (
               <li
                 key={item.title}
                 className="flex flex-col space-y-2 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-colors hover:border-[color:var(--tv-primary)]/40"

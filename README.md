@@ -8,7 +8,7 @@
 
 **Tech Vriksh** treats student builders like a sapling being rooted properly: providing useful guidance, hands-on exposure, and a supportive network that empowers members to grow into engineers who give shade to others later.
 
-Operating 100% free and student-led, Tech Vriksh runs workshops, virtual bootcamps, and in-person meetups in partnership with top technology hubs across Delhi NCR and India.
+Operating 100% free and student-driven, Tech Vriksh runs workshops, virtual bootcamps, and in-person meetups in partnership with top technology hubs across Delhi NCR and India.
 
 ### Key Highlights
 * **Unpaid & Student-Driven**: Built by students, for students — zero admission fees or hidden costs.

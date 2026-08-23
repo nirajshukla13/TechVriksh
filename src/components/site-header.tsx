@@ -15,6 +15,7 @@ const navItems = [
   // { href: '/hackathons', label: 'Hackathons' },
   { href: '/about', label: 'About' },
   { href: '/join', label: 'Join' },
+  { href: '/partner', label: 'Partner' },
 ];
 
 export function SiteHeader() {

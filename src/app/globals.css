@@ -130,7 +130,10 @@ body {
 /* ─── Card system ─── */
 .tv-card {
   border: 1px solid var(--tv-border);
-  background: linear-gradient(180deg, rgba(16, 30, 26, 0.72), rgba(11, 23, 20, 0.82));
+  /* Was 0.72/0.82. Cards are the other place body text sits directly over the
+     moving canvas; no `backdrop-filter` here on purpose, because there are far
+     more cards than section panels and the blur cost compounds. */
+  background: linear-gradient(180deg, rgba(16, 30, 26, 0.9), rgba(11, 23, 20, 0.95));
   box-shadow: var(--tv-shadow-lg);
   border-radius: 1.5rem;
   transition: box-shadow 400ms ease, border-color 400ms ease, transform 400ms ease;
@@ -388,15 +391,22 @@ body {
   animation: pulse-slow 3s ease-in-out infinite;
 }
 
-/* ─── Section backdrop for readability ─── */
+/* ─── Section backdrop for readability ───
+   The fixed 3D canvas sits behind every section, and its dust motes and light
+   gates are in constant motion — at the old 0.7/0.8 alpha they showed through
+   far enough to make secondary body text hard to read while scrolling. Raised
+   here rather than dimming the canvas itself: the journey stays at full
+   strength where it should be seen (the hero, the dividers, the gaps between
+   sections and the margins outside `max-w-7xl`), and only the panels that
+   actually carry text become near-opaque. */
 .section-backdrop {
   background: linear-gradient(
     180deg,
-    rgba(7, 17, 15, 0.7),
-    rgba(11, 23, 20, 0.8)
+    rgba(7, 17, 15, 0.9),
+    rgba(11, 23, 20, 0.95)
   );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(18px) saturate(115%);
+  -webkit-backdrop-filter: blur(18px) saturate(115%);
   border: 1px solid var(--tv-border);
   border-radius: 1.5rem;
   padding: 2rem;

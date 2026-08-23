@@ -20,12 +20,18 @@ export function IndiaMap({ data }: { data: StateMemberCount[] }) {
   const max = Math.max(...data.map((d) => d.count));
 
   return (
-    <div className="overflow-hidden rounded-[1.4rem] border border-white/10">
+    /* The height lives on this wrapper rather than in the MapContainer's inline
+       style, because an inline style cannot carry a media query: the map was a
+       flat 460px on a phone as well as a desktop, and at zoom 4 the whole of
+       India only needs ~330px of it. Leaflet still gets a definite height, which
+       is all it needs to size its tile layer. Keep the loading skeleton in
+       india-map-loader.tsx in sync with these three values. */
+    <div className="h-[340px] overflow-hidden rounded-[1.4rem] border border-white/10 sm:h-[380px] xl:h-[420px]">
       <MapContainer
         center={[22.5, 80]}
         zoom={4.4}
         scrollWheelZoom={false}
-        style={{ height: '460px', width: '100%', background: '#0c1210' }}
+        style={{ height: '100%', width: '100%', background: '#0c1210' }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
