@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { PosterImage } from '@/components/ui/PosterImage';
 import type { EventItem, EventKind, EventFormat } from '@/app/data';
 
@@ -26,6 +27,15 @@ const filters: { key: FilterKey; label: string }[] = [
   { key: 'workshop', label: 'Workshops' },
   { key: 'hackathon', label: 'Hackathons' },
 ];
+
+/** Which events a given tab would show. One definition, used both to render the
+ *  grid and to decide whether a tab is worth showing at all. */
+function matchesFilter(event: EventItem, key: FilterKey) {
+  if (key === 'all') return true;
+  if (key === 'offline') return event.format === 'offline';
+  if (key === 'online') return event.format === 'online';
+  return event.kind === key;
+}
 
 // ─── Single event card ────────────────────────────────────────────────────────
 function EventCard({ event, index }: { event: EventItem; index: number }) {
@@ -114,21 +124,28 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
           {event.description}
         </p>
 
-        {/* CTA */}
+        {/* CTA. "View Recap" is an internal route — it used to point at
+            `registrationUrl` in a new tab, which is why it led nowhere. */}
         <div className="mt-auto pt-2 border-t border-white/[0.06]">
-          <a
-            href={event.registrationUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={`group/link inline-flex items-center gap-1.5 tv-mono text-xs uppercase tracking-[0.2em] font-medium transition-colors ${
-              isUpcoming
-                ? 'text-[color:var(--tv-primary)] hover:text-white'
-                : 'text-[color:var(--tv-text-muted)] hover:text-[color:var(--tv-text-secondary)]'
-            }`}
-          >
-            <span>{isUpcoming ? 'Register' : 'View Recap'}</span>
-            <span className="transition-transform duration-300 group-hover/link:translate-x-1">→</span>
-          </a>
+          {isUpcoming ? (
+            <a
+              href={event.registrationUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="group/link inline-flex items-center gap-1.5 tv-mono text-xs uppercase tracking-[0.2em] font-medium transition-colors text-[color:var(--tv-primary)] hover:text-white"
+            >
+              <span>Register</span>
+              <span className="transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+            </a>
+          ) : (
+            <Link
+              href={`/events/${event.slug}`}
+              className="group/link inline-flex items-center gap-1.5 tv-mono text-xs uppercase tracking-[0.2em] font-medium transition-colors text-[color:var(--tv-text-muted)] hover:text-[color:var(--tv-text-secondary)]"
+            >
+              <span>View Recap</span>
+              <span className="transition-transform duration-300 group-hover/link:translate-x-1">→</span>
+            </Link>
+          )}
         </div>
       </div>
     </article>
@@ -139,20 +156,27 @@ function EventCard({ event, index }: { event: EventItem; index: number }) {
 export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventItem[] }) {
   const [activeFilter, setActiveFilter] = useState<FilterKey>('all');
 
-  const filtered = useMemo(() => {
-    if (activeFilter === 'all') return nonFeaturedEvents;
-    if (activeFilter === 'offline') return nonFeaturedEvents.filter((e) => e.format === 'offline');
-    if (activeFilter === 'online') return nonFeaturedEvents.filter((e) => e.format === 'online');
-    if (activeFilter === 'workshop') return nonFeaturedEvents.filter((e) => e.kind === 'workshop');
-    if (activeFilter === 'hackathon') return nonFeaturedEvents.filter((e) => e.kind === 'hackathon');
-    return nonFeaturedEvents;
-  }, [activeFilter, nonFeaturedEvents]);
+  // Hide a tab that no current event matches — with the two hackathon cards
+  // commented out of `data.ts`, "Hackathons" would otherwise be an empty tab.
+  // Re-adding those entries brings the tab back on its own.
+  const visibleFilters = useMemo(
+    () =>
+      filters.filter(
+        (f) => f.key === 'all' || nonFeaturedEvents.some((e) => matchesFilter(e, f.key))
+      ),
+    [nonFeaturedEvents]
+  );
+
+  const filtered = useMemo(
+    () => nonFeaturedEvents.filter((e) => matchesFilter(e, activeFilter)),
+    [activeFilter, nonFeaturedEvents]
+  );
 
   return (
     <div className="space-y-10">
       {/* ── Filter tabs ── */}
       <div className="flex flex-wrap items-center gap-2">
-        {filters.map((f) => {
+        {visibleFilters.map((f) => {
           const isActive = activeFilter === f.key;
           return (
             <button
@@ -169,9 +193,6 @@ export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventIt
             </button>
           );
         })}
-        <span className="ml-auto tv-mono text-[0.65rem] uppercase tracking-[0.2em] text-[color:var(--tv-text-muted)]">
-          {filtered.length} event{filtered.length !== 1 ? 's' : ''}
-        </span>
       </div>
 
       {/* ── Event grid ── */}

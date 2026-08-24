@@ -14,7 +14,6 @@ export default async function EventsPage() {
   const featuredSpeakers = speakers.filter((s) => s.event === 'Ctrl + Future');
 
   const upcomingCount = events.filter((e) => e.status === 'upcoming').length;
-  const pastCount = events.filter((e) => e.status === 'past').length;
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-10 sm:px-6 lg:px-8">
@@ -28,20 +27,17 @@ export default async function EventsPage() {
           <h1 className="tv-heading text-4xl sm:text-5xl tracking-[-0.05em] max-w-xl">
             Workshops, sessions &amp; offline events
           </h1>
-          <div className="flex items-center gap-5 tv-mono text-xs text-[color:var(--tv-text-muted)]">
-            {upcomingCount > 0 && (
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--tv-primary)] opacity-75" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--tv-primary)]" />
-                </span>
-                <span className="uppercase tracking-[0.2em] text-[color:var(--tv-primary)]">
-                  {upcomingCount} Upcoming
-                </span>
-              </div>
-            )}
-            <span className="uppercase tracking-[0.2em]">{pastCount} Past</span>
-          </div>
+          {upcomingCount > 0 && (
+            <div className="flex items-center gap-1.5 tv-mono text-xs text-[color:var(--tv-text-muted)]">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--tv-primary)] opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--tv-primary)]" />
+              </span>
+              <span className="uppercase tracking-[0.2em] text-[color:var(--tv-primary)]">
+                {upcomingCount} Upcoming
+              </span>
+            </div>
+          )}
         </div>
         <p className="max-w-2xl text-base leading-relaxed text-[color:var(--tv-text-secondary)]">
           Every event is a chance to learn something real, meet someone who builds, and leave with more than you came with.

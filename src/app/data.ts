@@ -17,6 +17,16 @@ export type EventItem = {
   dateLabel: string;
   description: string;
   image: string;
+  /**
+   * Curated photographs from the event itself, lead frame first, served from
+   * `public/events/<slug>/`. These are the team's own Drive originals brought
+   * into the repo and re-encoded as WebP — nothing is hotlinked, so the recap
+   * gallery and the hero rotation both go through Next's image optimizer.
+   *
+   * Ordering matters: `HeroVisual` picks specific indices out of a few of these
+   * arrays and needs landscape frames there, so each array leads with its
+   * landscape shots. Omitted where no photographs of the event exist.
+   */
   galleryImages?: string[];
   venue?: string;
   registrationUrl: string;
@@ -229,47 +239,49 @@ export const events: EventItem[] = [
       'Offline flagship event at OpsTree Global, Noida, with four sessions and roughly 80 to 90 attendees.',
     image: driveImage('18Cr19NBz79qP5PpNx_GzEHPIXNqu-RTO'),
     galleryImages: [
-      driveImage('13jOBQfdPya46BlHUkYLGNOcQJkc76VX_'),
-      driveImage('1sC2uJN9mwQ8UgqCC5uhL3YS1900SYdEs'),
-      driveImage('1vK30slc9tXRnMX20QQLdRrNiswr3PsKS'),
-      driveImage('161DYNB30R6nonyl_DDkv7_mpWaiP2Z2C'),
-      driveImage('1XsuaN7bLTCjRRZOimVg-ykX2c8U2UwfW')
+      '/events/ctrl-future/01.webp',
+      '/events/ctrl-future/02.webp',
+      '/events/ctrl-future/03.webp',
+      '/events/ctrl-future/04.webp',
+      '/events/ctrl-future/05.webp'
     ],
     venue: 'OpsTree Global, Noida',
     registrationUrl: 'https://lu.ma/tech-vriksh-ctrl-future',
     notes: ['Held at OpsTree Global, Noida', '~80–90 attendees', 'Four sessions']
   },
-  {
-    slug: 'hackvriksh-code-create-cultivate',
-    title: 'HackVriksh — Code. Create. Cultivate',
-    subtitle: 'Hackathon',
-    kind: 'hackathon',
-    format: 'offline',
-    status: 'past',
-    dateLabel: '16 Oct, 2025',
-    description:
-      'The flagship hackathon for Tech Vriksh, designed around practical problem solving, mentor feedback, and post-event continuity.',
-    image: driveImage('1bPAl9b3kwUyu7Modb3umroMP3Goxt5-4'),
-    registrationUrl: 'https://lu.ma/tech-vriksh-hackvriksh',
-    notes: ['Flagship hackathon', 'Official poster supplied by the team']
-  },
-  // Mirrors the `pre-hackathon-series` entry in `hackathons` below, so the
-  // Events page still lists it now that Hackathons is off the nav. Every field
-  // is copied or summarised from that entry — `format` is omitted and the date
-  // reads as unannounced because that record states neither.
-  {
-    slug: 'pre-hackathon-series',
-    title: 'Pre Hackathon Series',
-    subtitle: 'Hackathon Prep',
-    kind: 'hackathon',
-    status: 'upcoming',
-    dateLabel: 'Dates to be announced',
-    description:
-      'Warm-up sessions before HackVriksh: forming balanced teams and defining roles, then shaping a practical problem statement into a buildable project.',
-    image: '/sample/hackathon-02.svg',
-    registrationUrl: 'https://lu.ma/tech-vriksh-pre-hackathon-series',
-    notes: ['Session 1: Team setup', 'Session 2: Idea framing']
-  },
+  // ── Temporarily hidden from the Events page (to be re-added later) ──────────
+  // HackVriksh and the Pre Hackathon Series are commented out at the team's
+  // request. Their `hackathons` entries further down are untouched, so the
+  // (currently off-nav) Hackathons page and its detail routes still work when
+  // these cards come back.
+  // {
+  //   slug: 'hackvriksh-code-create-cultivate',
+  //   title: 'HackVriksh — Code. Create. Cultivate',
+  //   subtitle: 'Hackathon',
+  //   kind: 'hackathon',
+  //   format: 'offline',
+  //   status: 'past',
+  //   dateLabel: '16 Oct, 2025',
+  //   description:
+  //     'The flagship hackathon for Tech Vriksh, designed around practical problem solving, mentor feedback, and post-event continuity.',
+  //   image: driveImage('1bPAl9b3kwUyu7Modb3umroMP3Goxt5-4'),
+  //   registrationUrl: 'https://lu.ma/tech-vriksh-hackvriksh',
+  //   notes: ['Flagship hackathon', 'Official poster supplied by the team']
+  // },
+  // {
+  //   slug: 'pre-hackathon-series',
+  //   title: 'Pre Hackathon Series',
+  //   subtitle: 'Hackathon Prep',
+  //   kind: 'hackathon',
+  //   status: 'upcoming',
+  //   dateLabel: 'Dates to be announced',
+  //   description:
+  //     'Warm-up sessions before HackVriksh: forming balanced teams and defining roles, then shaping a practical problem statement into a buildable project.',
+  //   image: '/sample/hackathon-02.svg',
+  //   registrationUrl: 'https://lu.ma/tech-vriksh-pre-hackathon-series',
+  //   notes: ['Session 1: Team setup', 'Session 2: Idea framing']
+  // },
+  // ───────────────────────────────────────────────────────────────────────────
   {
     slug: 'techpath-2o-discover-decide-dominate',
     title: 'Techpath 2.O — Discover. Decide. Dominate',
@@ -281,7 +293,16 @@ export const events: EventItem[] = [
     description:
       'A follow-up Techpath edition with a refreshed speaker set, updated student questions, and a tighter offline agenda.',
     image: driveImage('1cL4eJXDI5veYhzdOrCmHLCeggGefojzw'),
-    venue: 'Offline venue to be confirmed',
+    galleryImages: [
+      '/events/techpath-2o-discover-decide-dominate/01.webp',
+      '/events/techpath-2o-discover-decide-dominate/02.webp',
+      '/events/techpath-2o-discover-decide-dominate/03.webp',
+      '/events/techpath-2o-discover-decide-dominate/04.webp',
+      '/events/techpath-2o-discover-decide-dominate/05.webp'
+    ],
+    // The event's own photographs show the venue signage and a slide reading
+    // "31 August 2025 · Thoughtworks Office, Gurgaon".
+    venue: 'Thoughtworks Office, Gurgaon',
     registrationUrl: 'https://lu.ma/tech-vriksh-techpath-2'
   },
   {
@@ -295,11 +316,15 @@ export const events: EventItem[] = [
     description:
       'An informal discussion evening with peer questions, quick speaker notes, and room for open conversation.',
     image: driveImage('1D0Z6SFOyr7ygd9kVF-3RW48cBjtWU5kL'),
-    // A real photograph from the evening, out of the event's own Drive folder
-    // ("Tech Baithak - 15 November 2025", 5th row). 1600×1200 landscape — the
-    // rest of that folder is portrait phone shots, and `image` above is the
-    // portrait poster, so this is the only frame-shaped picture of the event.
-    galleryImages: [driveImage('1gEqMD-X750DtmutBXPaihC07EfmS1k3q')],
+    // Four real photographs from the evening. Only the lead frame is landscape —
+    // the rest of that folder is portrait phone shots — so it goes first, which
+    // is also the frame the hero rotation reads.
+    galleryImages: [
+      '/events/tech-baithak/01.webp',
+      '/events/tech-baithak/02.webp',
+      '/events/tech-baithak/03.webp',
+      '/events/tech-baithak/04.webp'
+    ],
     venue: 'Community meetup room',
     registrationUrl: 'https://lu.ma/tech-vriksh-tech-baithak'
   },
@@ -314,12 +339,14 @@ export const events: EventItem[] = [
     description:
       'A photo-first offline meetup that captured community moments and gave members a lighter way to engage with the group.',
     image: driveImage('14slovMwWHb6F6IRTClRiYl2wStX69FoU'),
+    // Shot on iPhone, so the originals are HEIC and unusable in a browser;
+    // these are the same frames decoded and re-encoded as WebP.
     galleryImages: [
-      driveImage('1cfo58Tgwv1DRa9y1c1FbxiriSGzSW0kj'),
-      driveImage('1qiMsXL3f-lctEcHRrft9WN7RoVzkdh0W'),
-      driveImage('1a9RtBVquKA8h8pHfBlHxWFNdKwxNnwBD'),
-      driveImage('1aagXzd71ShU8b41HVmeXph7SlQhR077X'),
-      driveImage('1IbVTnuqneTeuIhInQhx3mQKAdRLl-7gu')
+      '/events/snap-the-lens/01.webp',
+      '/events/snap-the-lens/02.webp',
+      '/events/snap-the-lens/03.webp',
+      '/events/snap-the-lens/04.webp',
+      '/events/snap-the-lens/05.webp'
     ],
     venue: 'Community studio space',
     registrationUrl: 'https://lu.ma/tech-vriksh-snap-the-lens'
@@ -336,11 +363,11 @@ export const events: EventItem[] = [
       'An offline direction-setting session that helped students connect their current skills with a practical next step.',
     image: driveImage('1cbLAmp8eTojerH_DdxDt4oPqNuN9IES-'),
     galleryImages: [
-      driveImage('1yrXcQuGmS8wGPerz2Xx69_XGknYpxIZP'),
-      driveImage('1DuKXglmJ3LRvDSIpqy3NAMRA_AgqKIax'),
-      driveImage('1kdSpVMtE59fcFpl5gIcE3b7xUGiTV-gO'),
-      driveImage('1eUZ3GoIxpaJRs0GhChn8lz1QuYrsprZt'),
-      driveImage('1iN6r9MvV7goGeu2ntTrHQcQI9FNTJcSJ')
+      '/events/techpath-1o-discover-decide-dominate/01.webp',
+      '/events/techpath-1o-discover-decide-dominate/02.webp',
+      '/events/techpath-1o-discover-decide-dominate/03.webp',
+      '/events/techpath-1o-discover-decide-dominate/04.webp',
+      '/events/techpath-1o-discover-decide-dominate/05.webp'
     ],
     venue: 'Noida campus hall',
     registrationUrl: 'https://lu.ma/tech-vriksh-techpath-1'
@@ -369,6 +396,14 @@ export const events: EventItem[] = [
     description:
       'An approachable neural networks session with forward passes, loss functions, and a clear explanation of what the model is actually learning.',
     image: driveImage('1qJRHW8_UDww9xj3iov685_afyfEBhoar'),
+    // This was an online session, so the record only contains screen captures
+    // from the live call rather than photographs.
+    galleryImages: [
+      '/events/hands-on-workshop-on-neural-networks/01.webp',
+      '/events/hands-on-workshop-on-neural-networks/02.webp',
+      '/events/hands-on-workshop-on-neural-networks/03.webp',
+      '/events/hands-on-workshop-on-neural-networks/04.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-neural-networks'
   },
   {
@@ -382,6 +417,13 @@ export const events: EventItem[] = [
     description:
       'A workshop that teaches HTML, CSS, and logic through small game-style exercises instead of a standard slide deck.',
     image: driveImage('1Q9dWqGSRMEY4VQeOYyL6xcFTaOZoMObd'),
+    // Online session — screen captures from the live call, not photographs.
+    galleryImages: [
+      '/events/learn-web-development-in-a-fun-way-using-games/01.webp',
+      '/events/learn-web-development-in-a-fun-way-using-games/02.webp',
+      '/events/learn-web-development-in-a-fun-way-using-games/03.webp',
+      '/events/learn-web-development-in-a-fun-way-using-games/04.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-web-dev-games'
   },
   {
@@ -395,6 +437,13 @@ export const events: EventItem[] = [
     description:
       'A focused session on reading technical papers, framing research questions, and turning curiosity into a workable plan.',
     image: driveImage('1cYkopuhOwNbwTMozWwhkwJ2xMujFhJKN'),
+    // Online session — screen captures from the live call, not photographs.
+    galleryImages: [
+      '/events/research-mastery-workshop/01.webp',
+      '/events/research-mastery-workshop/02.webp',
+      '/events/research-mastery-workshop/03.webp',
+      '/events/research-mastery-workshop/04.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-research-mastery'
   },
   {
@@ -408,6 +457,13 @@ export const events: EventItem[] = [
     description:
       'An introductory GenAI build session covering prompting, API basics, and small experiments that students can extend later.',
     image: driveImage('1MdbeE963RHwxVRo6pmug1Q8odh5is3Po'),
+    // Online session — screen captures from the live call, not photographs.
+    galleryImages: [
+      '/events/hands-on-workshop-on-gen-ai/01.webp',
+      '/events/hands-on-workshop-on-gen-ai/02.webp',
+      '/events/hands-on-workshop-on-gen-ai/03.webp',
+      '/events/hands-on-workshop-on-gen-ai/04.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-gen-ai'
   },
   {
@@ -421,6 +477,11 @@ export const events: EventItem[] = [
     description:
       'A practical session on prioritising academics, internships, and build work without burning out in the middle of a semester.',
     image: driveImage('1oeYmN5-sKXK3Vw7IJBjgeNE3XYcIisoa'),
+    // Online session, and the record holds only two usable captures from it.
+    galleryImages: [
+      '/events/career-guidance-workshop-balance-your-cgpa-internships-hackathons/01.webp',
+      '/events/career-guidance-workshop-balance-your-cgpa-internships-hackathons/02.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-career-guidance'
   },
   {
@@ -434,6 +495,13 @@ export const events: EventItem[] = [
     description:
       'A two-part practical workshop on cleaning datasets, building simple models, and interpreting results with notebooks.',
     image: driveImage('14S9fO9yrxhLKj87w0d1rEP9_YX147Ksi'),
+    // Online workshop — screen captures from the two live sessions, not photographs.
+    galleryImages: [
+      '/events/2-day-data-science-hands-on-workshop/01.webp',
+      '/events/2-day-data-science-hands-on-workshop/02.webp',
+      '/events/2-day-data-science-hands-on-workshop/03.webp',
+      '/events/2-day-data-science-hands-on-workshop/04.webp'
+    ],
     registrationUrl: 'https://lu.ma/tech-vriksh-data-science-workshop'
   }
 ];
