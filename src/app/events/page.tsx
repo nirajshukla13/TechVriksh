@@ -16,10 +16,10 @@ export default async function EventsPage() {
   const upcomingCount = events.filter((e) => e.status === 'upcoming').length;
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-10 sm:px-6 lg:px-8">
+    <main className="mx-auto w-full max-w-7xl px-4 pb-24 pt-6 sm:px-6 lg:px-8">
 
       {/* ═══ PAGE HEADER ═══ */}
-      <div className="mb-12 space-y-4">
+      <div className="mb-10 space-y-4">
         <div className="tv-mono text-xs uppercase tracking-[0.36em] text-[color:var(--tv-primary)]">
           Tech Vriksh · Events
         </div>
@@ -46,7 +46,7 @@ export default async function EventsPage() {
 
       {/* ═══ FEATURED FLAGSHIP CARD ═══ */}
       {featuredEvent && (
-        <section className="mb-16">
+        <section className="mb-12">
           <div className="tv-mono mb-4 flex items-center gap-3 text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--tv-text-muted)]">
             <div className="h-px w-6 bg-[color:var(--tv-border)]" />
             Flagship Event
@@ -140,16 +140,16 @@ export default async function EventsPage() {
                       </div>
                     )}
 
-                    {/* CTA */}
-                    <a
-                      href={featuredEvent.registrationUrl}
-                      target="_blank"
-                      rel="noreferrer"
+                    {/* CTA — internal recap route. This pointed at
+                        `registrationUrl` in a new tab, which is a lu.ma URL that
+                        404s; that is what made "Event Recap" lead nowhere. */}
+                    <Link
+                      href={`/events/${featuredEvent.slug}`}
                       className="group/cta inline-flex items-center gap-2 tv-mono text-sm uppercase tracking-[0.2em] font-medium text-[color:var(--tv-text-muted)] hover:text-white transition-colors"
                     >
                       <span>Event Recap</span>
                       <span className="transition-transform duration-300 group-hover/cta:translate-x-1">→</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default async function EventsPage() {
       )}
 
       {/* ═══ DIVIDER ═══ */}
-      <div className="mb-12 flex items-center gap-4">
+      <div className="mb-10 flex items-center gap-4">
         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[color:var(--tv-border)] to-transparent" />
         <span className="tv-mono text-[0.65rem] uppercase tracking-[0.3em] text-[color:var(--tv-text-tertiary)]">
           All Events
@@ -171,7 +171,7 @@ export default async function EventsPage() {
       <EventsClient nonFeaturedEvents={nonFeaturedEvents} />
 
       {/* ═══ FOOTER NUDGE ═══ */}
-      <div className="mt-20 rounded-[2rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.5)] to-[rgba(11,23,20,0.7)] p-8 sm:p-12 text-center space-y-5">
+      <div className="mt-16 rounded-[2rem] border border-[color:var(--tv-border)] bg-gradient-to-b from-[rgba(16,30,26,0.5)] to-[rgba(11,23,20,0.7)] p-8 sm:p-12 text-center space-y-5">
         <div className="tv-mono text-xs uppercase tracking-[0.3em] text-[color:var(--tv-text-muted)]">
           What&apos;s next
         </div>

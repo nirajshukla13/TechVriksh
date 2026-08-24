@@ -173,7 +173,7 @@ export function EventsClient({ nonFeaturedEvents }: { nonFeaturedEvents: EventIt
   );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* ── Filter tabs ── */}
       <div className="flex flex-wrap items-center gap-2">
         {visibleFilters.map((f) => {
