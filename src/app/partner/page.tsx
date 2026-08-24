@@ -97,8 +97,18 @@ export default function PartnerPage() {
       key: 'email',
       label: 'Email',
       value: partnershipEmail,
-      href: `mailto:${partnershipEmail}`,
-      external: false
+      // Gmail web compose with the recipient pre-filled — deliberately NOT a
+      // `mailto:`, so the click lands in Gmail in the browser rather than
+      // whatever desktop mail client happens to be registered. `?view=cm&fs=1`
+      // is Gmail's "compose, full-screen" mode; `to=` is the recipient. The
+      // yahoo.com recipient is just an address — the sender still composes in
+      // Gmail, so this never routes to Yahoo Mail.
+      href: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(partnershipEmail)}`,
+      // Opens in a new tab (like the LinkedIn cards) so the partner page stays
+      // put. `external` is left false only so the card keeps its `→` indicator
+      // unchanged; `newTab` drives the target without touching that styling.
+      external: false,
+      newTab: true
     },
     partnershipFormUrl && {
       key: 'form',
@@ -127,6 +137,8 @@ export default function PartnerPage() {
     value: string;
     href: string;
     external: boolean;
+    /** Force a new tab without switching the card's `→` indicator to `↗`. */
+    newTab?: boolean;
   }[];
 
   return (
@@ -404,7 +416,7 @@ export default function PartnerPage() {
                 <a
                   key={route.key}
                   href={route.href}
-                  {...(route.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                  {...(route.external || route.newTab ? { target: '_blank', rel: 'noreferrer' } : {})}
                   className="group flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 transition-all duration-300 hover:border-[rgba(57,217,138,0.45)] hover:bg-white/[0.07]"
                 >
                   <span className="min-w-0">
