@@ -229,46 +229,16 @@ export function HeroVisual() {
         </div>
       </div>
 
-      {/* ── Bottom Content Overlay: Event Title, Supporting Stats, Thumbnails & CTA ── */}
+      {/* ── Bottom Content Overlay: Event Title, Thumbnails & CTA ── */}
       <div className="relative z-10 p-5 sm:p-7 space-y-4">
         {/* Event Title & Subtitle */}
         <div>
           <h2 className="tv-heading text-2xl sm:text-3xl lg:text-[2.2rem] font-bold text-white tracking-[-0.03em] leading-tight">
             {activePhoto.eventTitle}
           </h2>
-          <p className="tv-mono text-xs uppercase tracking-[0.22em] text-[color:var(--tv-primary)] mt-1 font-medium">
+          <p className="tv-mono text-xs uppercase tracking-[0.22em] text-[color:var(--tv-primary)] mt-1.5 font-medium">
             {activePhoto.eventTheme}
           </p>
-        </div>
-
-        {/* Supporting stats cards */}
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
-          <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
-            <div className="tv-heading text-lg sm:text-2xl font-bold text-white tracking-tight">
-              {activePhoto.attendees ?? statText(publicStats.members)}
-            </div>
-            <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
-              {activePhoto.attendees ? 'Attendees' : 'Members'}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
-            <div className="tv-heading text-lg sm:text-2xl font-bold text-[color:var(--tv-primary-light)] tracking-tight">
-              {statText(publicStats.states)}
-            </div>
-            <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
-              States
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-white/10 bg-black/65 p-2.5 sm:p-3 backdrop-blur-sm transition-colors hover:border-[color:var(--tv-primary)]/40">
-            <div className="tv-heading text-lg sm:text-2xl font-bold text-[color:var(--tv-cyan)] tracking-tight">
-              {statText(publicStats.events)}
-            </div>
-            <div className="tv-mono mt-0.5 text-[0.62rem] sm:text-[0.68rem] uppercase tracking-[0.18em] text-[color:var(--tv-text-muted)]">
-              Events
-            </div>
-          </div>
         </div>
 
         {/* Bottom bar: Optional Photo Switchers + Explore Events link */}
