@@ -150,7 +150,7 @@ export default async function EventsPage() {
                       <span>Event Recap</span>
                       <span className="transition-transform duration-300 group-hover/cta:translate-x-1">→</span>
                     </Link>
-                  </div>
+n                  </div>
                 </div>
               </div>
             </div>
